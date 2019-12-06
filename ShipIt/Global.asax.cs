@@ -1,49 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Web.Security;
-using System.Web.SessionState;
+using System.Web.Http.Dispatcher;
+using Castle.Core.Resource;
+using Castle.Windsor;
+using Castle.Windsor.Configuration.Interpreters;
 
 namespace ShipIt
 {
     public class Global : System.Web.HttpApplication
     {
 
+        private readonly IWindsorContainer container;
+
+        public Global()
+        {
+            this.container = 
+                new WindsorContainer(new XmlInterpreter(new ConfigResource("castle")));
+        }
+
+        public override void Dispose()
+        {
+            this.container.Dispose();
+            base.Dispose();
+        }
+
         protected void Application_Start(object sender, EventArgs e)
         {
+
             WebApiConfig.Register(GlobalConfiguration.Configuration);
-        }
-
-        protected void Session_Start(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_AuthenticateRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_Error(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Session_End(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_End(object sender, EventArgs e)
-        {
-
+            GlobalConfiguration.Configuration.Services.Replace(
+                typeof(IHttpControllerActivator),
+                new WindsorCompositionRoot(this.container));
         }
     }
 }
