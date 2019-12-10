@@ -1,12 +1,10 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.Web.Http;
 using Npgsql;
 using ShipIt.Repositories;
 
-namespace ShipIt
+namespace ShipIt.Controllers
 {
     public class Status
     {
@@ -46,17 +44,6 @@ namespace ShipIt
                 StockHeld = stockRepository.GetStockHeldSum(),
                 WarehouseCount = employeeRepository.GetWarehouseCount()
             };
-        }
-
-        public static IDbConnection CreateSqlConnection()
-        {
-            return new NpgsqlConnection(ConfigurationManager.ConnectionStrings["MyPostgres"].ConnectionString);
-        }
-
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
         }
 
         // POST api/<controller>

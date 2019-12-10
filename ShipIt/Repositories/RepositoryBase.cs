@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Web;
 using Npgsql;
+using ShipIt.Controllers;
+using ShipIt.Models.DataModels;
 
 namespace ShipIt.Repositories
 {
@@ -34,6 +37,31 @@ namespace ShipIt.Repositories
                 {
                     reader.Read();
                     return reader.GetInt64(0);
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            };
+        }
+
+        protected T QueryForProduct<T>(string sql, Func<IDataReader, T> create, params NpgsqlParameter[] parameters) 
+        {
+            using (IDbConnection connection = Connection)
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+                connection.Open();
+                var reader = command.ExecuteReader();
+
+                try
+                {
+                    reader.Read();
+                    return create(reader);
                 }
                 finally
                 {

@@ -31,6 +31,11 @@ namespace ShipIt
             GlobalConfiguration.Configuration.Services.Replace(
                 typeof(IHttpControllerActivator),
                 new WindsorCompositionRoot(this.container));
+            GlobalConfiguration.Configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters
+                .JsonFormatter);
+
+
+
         }
     }
 }
