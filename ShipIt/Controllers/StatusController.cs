@@ -1,7 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Web.Http;
-using Npgsql;
+﻿using System.Web.Http;
 using ShipIt.Repositories;
 
 namespace ShipIt.Controllers

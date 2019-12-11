@@ -2,25 +2,15 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Common;
-using System.Web;
+using System.Dynamic;
+using System.Linq;
 using Npgsql;
-using ShipIt.Controllers;
-using ShipIt.Models.DataModels;
+using ShipIt.Exceptions;
 
 namespace ShipIt.Repositories
 {
-    //TODO MatEng This wrapper is a bit of a hack.  There should be a way to inject the Connection directly but I'm not sure how with the xml format of Castle Windsor.
-    public interface IDatabaseConnectionWrapper
-    {
-        IDbConnection Connection { get; }
-    }
-
     public abstract class RepositoryBase
     {
-        private readonly IDatabaseConnectionWrapper connectionWrapper;
-
-        //TODO A new connection is created every time a query is called.  Ideally just one connection would be used for the request.
         private IDbConnection Connection =>
             new NpgsqlConnection(ConfigurationManager.ConnectionStrings["MyPostgres"].ConnectionString);
 
@@ -45,7 +35,72 @@ namespace ShipIt.Repositories
             };
         }
 
-        protected T QueryForProduct<T>(string sql, Func<IDataReader, T> create, params NpgsqlParameter[] parameters) 
+        protected void RunSingleQuery(string sql, string noResultsExceptionMessage, params NpgsqlParameter[] parameters)
+        {
+            using (IDbConnection connection = Connection)
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+                connection.Open();
+                var reader = command.ExecuteReader();
+
+                try
+                {
+                    if (reader.RecordsAffected != 1)
+                    {
+                        throw new NoSuchEntityException(noResultsExceptionMessage);
+                    }
+                    reader.Read();
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            };
+        }
+
+        protected TDataModel RunSingleGetQuery<TDataModel>(string sql, Func<IDataReader, TDataModel> mapToDataModel, string noResultsExceptionMessage, params NpgsqlParameter[] parameters)
+        {
+            return RunGetQuery(sql, mapToDataModel, noResultsExceptionMessage, parameters).Single();
+        }
+
+        protected IEnumerable<TDataModel> RunGetQuery<TDataModel>(string sql, Func<IDataReader, TDataModel> mapToDataModel, string noResultsExceptionMessage, params NpgsqlParameter[] parameters)
+        {
+            using (IDbConnection connection = Connection)
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+                connection.Open();
+                var reader = command.ExecuteReader();
+
+                try
+                {
+                    if (!reader.Read())
+                    {
+                        throw new NoSuchEntityException(noResultsExceptionMessage);
+                    }
+                    yield return mapToDataModel(reader);
+
+                    while (reader.Read())
+                    {
+                        yield return mapToDataModel(reader);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            };
+        }
+        protected void RunQuery(string sql, params NpgsqlParameter[] parameters)
         {
             using (IDbConnection connection = Connection)
             {
@@ -61,7 +116,6 @@ namespace ShipIt.Repositories
                 try
                 {
                     reader.Read();
-                    return create(reader);
                 }
                 finally
                 {

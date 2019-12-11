@@ -1,41 +1,54 @@
-﻿using System;
-using System.Configuration;
-using System.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
-using Npgsql;
 using ShipIt.Models.ApiModels;
+using ShipIt.Models.DataModels;
+using ShipIt.Parsers;
 using ShipIt.Repositories;
+using ShipIt.Validators;
 
 namespace ShipIt.Controllers
 {
-    public class Product
+    public class ProductsRequestModel
     {
-        public int Id { get; set; }
-        public string gtin { get; set; }
-        public string gcp { get; set; }
-        public string name { get; set; }
-        public float weight { get; set; }
-        public int lowerThreshold { get; set; }
-        public bool discontinued { get; set; }
-        public int minimumOrderQuantity { get; set; }
+        public IEnumerable<ProductRequestModel> Products { get; set; }
     }
 
     public class ProductController : ApiController
     {
-        private IEmployeeRepository employeeRepository;
-        private ICompanyRepository companyRepository;
-        private IProductRepository productRepository;
-        private IStockRepository stockRepository;
+        private readonly IProductRepository productRepository;
 
-        public ProductController(IEmployeeRepository employeeRepository, ICompanyRepository companyRepository, IProductRepository productRepository, IStockRepository stockRepository)
+        public ProductController(IProductRepository productRepository)
         {
             this.productRepository = productRepository;
         }
 
-        
-        public ProductApiModel Get(string gtin)
+        public ProductResponse Get(string gtin)
         {
-            return productRepository.GetProductByGtin(gtin);
+            var product = new ProductApiModel(productRepository.GetProductByGtin(gtin));
+            return new ProductResponse(product);
+        }
+
+        public Response Post([FromBody]ProductsRequestModel requestModel)
+        {
+            var parsedProducts = new List<ProductApiModel>();
+
+            foreach (var requestProduct in requestModel.Products)
+            {
+                var parsedProduct = requestProduct.Parse();
+                new ProductValidator().Validate(parsedProduct);
+                parsedProducts.Add(parsedProduct);
+            }
+
+            var dataProducts = parsedProducts.Select(p => new ProductDataModel(p));
+            productRepository.AddProducts(dataProducts);
+            return new Response() { Success = true };
+        }
+
+        public Response Discontinue(string gtin)
+        {
+            productRepository.DiscontinueProductByGtin(gtin);
+            return new Response() { Success = true };
         }
     }
-    }
+}

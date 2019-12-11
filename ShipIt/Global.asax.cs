@@ -34,8 +34,6 @@ namespace ShipIt
             GlobalConfiguration.Configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters
                 .JsonFormatter);
 
-
-
         }
     }
 }

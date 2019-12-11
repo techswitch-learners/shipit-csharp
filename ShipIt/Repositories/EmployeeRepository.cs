@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Web;
 using Npgsql;
+using ShipIt.Models.DataModels;
 
 namespace ShipIt.Repositories
 {
@@ -11,9 +10,11 @@ namespace ShipIt.Repositories
     {
         int GetCount();
         int GetWarehouseCount();
+        EmployeeDataModel GetEmployeeByName(string name);
+        IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId);
     }
 
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : RepositoryBase, IEmployeeRepository
     {
         public static IDbConnection CreateSqlConnection()
         {
@@ -64,5 +65,28 @@ namespace ShipIt.Repositories
                 }
             };
         }
+
+        public EmployeeDataModel GetEmployeeByName(string name)
+        {
+
+            string sql = "SELECT name, w_id, role, ext FROM em WHERE name = @name";
+            var parameter = new NpgsqlParameter("@name", name);
+            string noProductWithIdErrorMessage = $"No employees found with name: {name}";
+            return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader),noProductWithIdErrorMessage, parameter);
+        }
+
+        public IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId)
+        {
+
+            string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id";
+            var parameter = new NpgsqlParameter("@name", DbType.Int32)
+            {
+                Value = warehouseId
+            };
+            string noProductWithIdErrorMessage = $"No employees found with Warehouse Id: {warehouseId}";
+            return base.RunGetQuery(sql, reader => new EmployeeDataModel(reader), noProductWithIdErrorMessage, parameter);
+        }
+
+
     }
 }

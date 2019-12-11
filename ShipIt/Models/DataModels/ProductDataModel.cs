@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Reflection;
-using System.Web;
+using Npgsql;
+using ShipIt.Models.ApiModels;
 
 namespace ShipIt.Models.DataModels
 {
@@ -21,15 +20,35 @@ namespace ShipIt.Models.DataModels
 
     public abstract class DataModel
     {
-        protected DataModel(IDataReader dataReader)
+        protected DataModel()
+        {
+        }
+
+        public DataModel(IDataReader dataReader)
         {
             var type = GetType();
             var properties = type.GetProperties();
+
             foreach (var property in properties)
             {
                 var attribute = (DatabaseColumnName)property.GetCustomAttributes(typeof(DatabaseColumnName), false).First();
                 property.SetValue(this, dataReader[attribute.Name], null);
             }
+        }
+
+        public IEnumerable<NpgsqlParameter> GetNpgsqlParameters()
+        {
+            var type = GetType();
+            var properties = type.GetProperties();
+            var parameters = new List<NpgsqlParameter>();
+
+            foreach (var property in properties)
+            {
+                var attribute = (DatabaseColumnName)property.GetCustomAttributes(typeof(DatabaseColumnName), false).First();
+                parameters.Add(new NpgsqlParameter("@" + attribute.Name,property.GetValue(this, null)));
+            }
+
+            return parameters;
         }
     }
 
@@ -61,6 +80,21 @@ namespace ShipIt.Models.DataModels
 
         public ProductDataModel(IDataReader dataReader) : base(dataReader)
         { }
+
+        public ProductDataModel()
+        { }
+
+        public ProductDataModel(ProductApiModel apiModel)
+        {
+            Id = apiModel.id;
+            Gtin = apiModel.gtin;
+            Gcp = apiModel.gcp;
+            Name = apiModel.name;
+            Weight = apiModel.weight;
+            LowerThreshold = apiModel.lowerThreshold;
+            Discontinued = apiModel.discontinued ? 1 : 0;
+            MinimumOrderQuantity = apiModel.minimumOrderQuantity;
+        }
     }
 
 }

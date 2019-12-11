@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Web;
-using Npgsql;
-
-namespace ShipIt.Repositories
+﻿namespace ShipIt.Repositories
 {
     public interface IStockRepository
     {

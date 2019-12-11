@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
-using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using System.Web.Routing;
-using Castle.Core;
-using Castle.Core.Resource;
 using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
 
 namespace ShipIt
 {
