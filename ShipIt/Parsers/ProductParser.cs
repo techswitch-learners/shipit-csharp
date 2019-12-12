@@ -5,21 +5,9 @@ using ShipIt.Models.ApiModels;
 
 namespace ShipIt.Parsers
 {
-    public class ProductRequestModel
-    {
-        public string Gtin { get; set; }
-        public string Gcp { get; set; }
-        public string Name { get; set; }
-        public string Weight { get; set; }
-        public string LowerThreshold { get; set; }
-        public string Discontinued { get; set; }
-        public string MinimumOrderQuantity { get; set; }
-    }
-
-
     public static class ProductParser
     {
-        public static ProductApiModel Parse(this ProductRequestModel requestModel)
+        public static Product Parse(this ProductRequestModel requestModel)
         {
             List<string> errors = new List<string>();
 
@@ -68,15 +56,15 @@ namespace ShipIt.Parsers
                 throw new MalformedRequestException(string.Join("\n", errors));
             }
 
-            return new ProductApiModel()
+            return new Product()
             {
-                discontinued = discontinued,
-                gcp = requestModel.Gcp,
-                gtin = requestModel.Gtin,
-                lowerThreshold = lowerThreshold,
-                minimumOrderQuantity = minimumOrderQuantity,
-                name = requestModel.Name,
-                weight = weight
+                Discontinued = discontinued,
+                Gcp = requestModel.Gcp,
+                Gtin = requestModel.Gtin,
+                LowerThreshold = lowerThreshold,
+                MinimumOrderQuantity = minimumOrderQuantity,
+                Name = requestModel.Name,
+                Weight = weight
             };
         }
     }

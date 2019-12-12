@@ -7,7 +7,6 @@ namespace ShipIt
     {
         public static void Register(HttpConfiguration config)
         {
-            
             config.Routes.MapHttpRoute(
                 "ApiRoot",
                 "Test/{id}",

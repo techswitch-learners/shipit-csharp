@@ -2,8 +2,8 @@
 {
     public class ProductResponse: Response
     {
-        public ProductApiModel Product { get; set; }
-        public ProductResponse(ProductApiModel product)
+        public Product Product { get; set; }
+        public ProductResponse(Product product)
         {
             Product = product;
             Success = true;

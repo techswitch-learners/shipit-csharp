@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using ShipIt.Controllers;
+using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
+using ShipIt.Parsers;
 
 namespace ShipItTest
 {
@@ -62,7 +66,7 @@ namespace ShipItTest
             return this;
         }
 
-        public ProductDataModel CreateProduct()
+        public ProductDataModel CreateProductDatabaseModel()
         {
             return new ProductDataModel()
             {
@@ -75,6 +79,41 @@ namespace ShipItTest
                 Name = this.Name,
                 Weight = this.Weight
             };
+        }
+
+        public Product CreateProduct()
+        {
+            return new Product()
+            {
+                Discontinued = this.Discontinued == 1,
+                Gcp = this.Gcp,
+                Gtin = this.Gtin,
+                Id = this.Id,
+                LowerThreshold = this.LowerThreshold,
+                MinimumOrderQuantity = this.MinimumOrderQuantity,
+                Name = this.Name,
+                Weight = this.Weight
+            };
+        }
+
+        public ProductsRequestModel CreateProductRequest()
+        {
+            return new ProductsRequestModel()
+            {
+                Products = new List<ProductRequestModel>()
+                {
+                    new ProductRequestModel()
+                    {
+                        Discontinued = this.Discontinued == 1 ? "true" : "false",
+                        Gcp = this.Gcp,
+                        Gtin = this.Gtin,
+                        LowerThreshold = this.LowerThreshold.ToString(),
+                        MinimumOrderQuantity = this.MinimumOrderQuantity.ToString(),
+                        Name = this.Name,
+                        Weight = this.Weight.ToString()
+                    }
+                } 
+            }; 
         }
     }
 }

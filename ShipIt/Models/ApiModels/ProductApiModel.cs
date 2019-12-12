@@ -6,7 +6,7 @@ using ShipIt.Models.DataModels;
 
 namespace ShipIt.Models.ApiModels
 {
-    public class ProductApiModel
+    public class Product
     {
         public int id { get; set; }
         public string gtin { get; set; }
@@ -17,7 +17,7 @@ namespace ShipIt.Models.ApiModels
         public bool discontinued { get; set; }
         public int minimumOrderQuantity { get; set; }
 
-        public ProductApiModel(ProductDataModel dataModel)
+        public Product(ProductDataModel dataModel)
         {
             id = dataModel.Id;
             gtin = dataModel.Gtin;
@@ -30,7 +30,7 @@ namespace ShipIt.Models.ApiModels
         }
 
         //Empty constructor needed for Xml serialization
-        public ProductApiModel()
+        public Product()
         {
         }
     }

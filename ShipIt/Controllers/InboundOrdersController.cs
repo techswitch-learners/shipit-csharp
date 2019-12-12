@@ -32,15 +32,15 @@ namespace ShipIt.Controllers
             Dictionary<Company, List<OrderLine>> orderlinesByCompany = new Dictionary<Company, List<OrderLine>>();
             foreach (var stock in allStock)
             {
-                ProductApiModel product = new ProductApiModel(productRepository.GetProductById(stock.ProductId));
-                if(stock.held < product.lowerThreshold && !product.discontinued)
+                Product product = new Product(productRepository.GetProductById(stock.ProductId));
+                if(stock.held < product.LowerThreshold && !product.Discontinued)
                 {
-                    Company company = new Company(companyRepository.GetCompany(product.gcp));
+                    Company company = new Company(companyRepository.GetCompany(product.Gcp));
 
                     int magicalInt = 3; //I have no idea what this is, or why it is 3.
 
                     //The line below is copied from the Java code. It is not known why this is the order quantity.
-                    var orderQuantity = Math.Max(product.lowerThreshold * magicalInt - stock.held, product.minimumOrderQuantity);
+                    var orderQuantity = Math.Max(product.LowerThreshold * magicalInt - stock.held, product.MinimumOrderQuantity);
 
                     if (!orderlinesByCompany.ContainsKey(company))
                     {
@@ -50,8 +50,8 @@ namespace ShipIt.Controllers
                     orderlinesByCompany[company].Add( 
                         new OrderLine()
                         {
-                            gtin = product.gtin,
-                            name = product.name,
+                            gtin = product.Gtin,
+                            name = product.Name,
                             quantity = orderQuantity
                         });
                 }

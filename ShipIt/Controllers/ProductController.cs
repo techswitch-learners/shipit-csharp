@@ -9,11 +9,6 @@ using ShipIt.Validators;
 
 namespace ShipIt.Controllers
 {
-    public class ProductsRequestModel
-    {
-        public IEnumerable<ProductRequestModel> Products { get; set; }
-    }
-
     public class ProductController : ApiController
     {
         private readonly IProductRepository productRepository;
@@ -25,13 +20,13 @@ namespace ShipIt.Controllers
 
         public ProductResponse Get(string gtin)
         {
-            var product = new ProductApiModel(productRepository.GetProductByGtin(gtin));
+            var product = new Product(productRepository.GetProductByGtin(gtin));
             return new ProductResponse(product);
         }
 
         public Response Post([FromBody]ProductsRequestModel requestModel)
         {
-            var parsedProducts = new List<ProductApiModel>();
+            var parsedProducts = new List<Product>();
 
             foreach (var requestProduct in requestModel.Products)
             {

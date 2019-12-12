@@ -84,16 +84,16 @@ namespace ShipIt.Models.DataModels
         public ProductDataModel()
         { }
 
-        public ProductDataModel(ProductApiModel apiModel)
+        public ProductDataModel(Product apiModel)
         {
-            Id = apiModel.id;
-            Gtin = apiModel.gtin;
-            Gcp = apiModel.gcp;
-            Name = apiModel.name;
-            Weight = apiModel.weight;
-            LowerThreshold = apiModel.lowerThreshold;
-            Discontinued = apiModel.discontinued ? 1 : 0;
-            MinimumOrderQuantity = apiModel.minimumOrderQuantity;
+            Id = apiModel.Id;
+            Gtin = apiModel.Gtin;
+            Gcp = apiModel.Gcp;
+            Name = apiModel.Name;
+            Weight = apiModel.Weight;
+            LowerThreshold = apiModel.LowerThreshold;
+            Discontinued = apiModel.Discontinued ? 1 : 0;
+            MinimumOrderQuantity = apiModel.MinimumOrderQuantity;
         }
     }
 

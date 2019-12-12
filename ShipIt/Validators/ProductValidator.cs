@@ -1,28 +1,23 @@
-﻿using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Text;
-using System.Web;
-using ShipIt.Exceptions;
-using ShipIt.Models.ApiModels;
+﻿using ShipIt.Models.ApiModels;
 
 namespace ShipIt.Validators
 {
-    public class ProductValidator: BaseValidator<ProductApiModel>
+    public class ProductValidator: BaseValidator<Product>
     {
-        protected override void DoValidation(ProductApiModel target)
+        protected override void DoValidation(Product target)
         {
-        assertNotBlank("name", target.name);
-        AssertMaxLength("name", target.name, 255);
+        assertNotBlank("name", target.Name);
+        AssertMaxLength("name", target.Name, 255);
 
-        ValidateGtin(target.gtin);
+        ValidateGtin(target.Gtin);
 
-        ValidateGcp(target.gcp);
+        ValidateGcp(target.Gcp);
 
-        AssertNonNegative("m_g", target.weight);
+        AssertNonNegative("m_g", target.Weight);
 
-        AssertNonNegative("lowerThreshold", target.lowerThreshold);
+        AssertNonNegative("lowerThreshold", target.LowerThreshold);
 
-        AssertNonNegative("minimumOrderQuantity", target.minimumOrderQuantity);
+        AssertNonNegative("minimumOrderQuantity", target.MinimumOrderQuantity);
         }
     }
 }

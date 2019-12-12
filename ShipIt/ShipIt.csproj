@@ -115,6 +115,13 @@
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Exceptions\ErrorCode.cs" />
+    <Compile Include="Exceptions\InsufficientStockException.cs" />
+    <Compile Include="Exceptions\InvalidStateException.cs" />
+    <Compile Include="Exceptions\MalformedRequestException.cs" />
+    <Compile Include="Exceptions\NoSuchEntityException.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Models\ApiModels\ProductsRequestModel.cs" />
     <Compile Include="Filters\ShipItExceptionFilterAttribute.cs" />
     <Compile Include="Models\ApiModels\DataBaseRoles.cs" />
     <Compile Include="Models\ApiModels\Employee.cs" />
@@ -129,7 +136,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ApiModels\ProductApiModel.cs" />
+    <Compile Include="Models\ApiModels\Product.cs" />
     <Compile Include="Models\DataModels\CompanyDataModel.cs" />
     <Compile Include="Models\DataModels\EmployeeDataModel.cs" />
     <Compile Include="Models\DataModels\ProductDataModel.cs" />
@@ -138,6 +145,7 @@
     <Compile Include="Models\DataModels\StockDataModel.cs" />
     <Compile Include="Parsers\EmployeeParser.cs" />
     <Compile Include="Parsers\ProductParser.cs" />
+    <Compile Include="Models\ApiModels\ProductRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />

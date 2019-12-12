@@ -11,10 +11,6 @@ using ShipIt.Validators;
 
 namespace ShipIt.Controllers
 {
-    public class EmployeeRequestModel
-    {
-        public IEnumerable<ProductRequestModel> Products { get; set; }
-    }
 
     public class EmployeeController : ApiController
     {
