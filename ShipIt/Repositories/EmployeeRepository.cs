@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using Npgsql;
+using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 
 namespace ShipIt.Repositories
@@ -12,6 +13,7 @@ namespace ShipIt.Repositories
         int GetWarehouseCount();
         EmployeeDataModel GetEmployeeByName(string name);
         IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId);
+        EmployeeDataModel GetOperationsManager(int warehouseId);
     }
 
     public class EmployeeRepository : RepositoryBase, IEmployeeRepository
@@ -68,7 +70,6 @@ namespace ShipIt.Repositories
 
         public EmployeeDataModel GetEmployeeByName(string name)
         {
-
             string sql = "SELECT name, w_id, role, ext FROM em WHERE name = @name";
             var parameter = new NpgsqlParameter("@name", name);
             string noProductWithIdErrorMessage = $"No employees found with name: {name}";
@@ -79,14 +80,24 @@ namespace ShipIt.Repositories
         {
 
             string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id";
-            var parameter = new NpgsqlParameter("@name", DbType.Int32)
-            {
-                Value = warehouseId
-            };
+            var parameter = new NpgsqlParameter("@name", warehouseId);
             string noProductWithIdErrorMessage = $"No employees found with Warehouse Id: {warehouseId}";
             return base.RunGetQuery(sql, reader => new EmployeeDataModel(reader), noProductWithIdErrorMessage, parameter);
         }
 
+        public EmployeeDataModel GetOperationsManager(int warehouseId)
+        {
+
+            string sql = $"SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id AND role = @role";
+            var parameters = new []
+            {
+                new NpgsqlParameter("@w_id", warehouseId),
+                new NpgsqlParameter("@role", DataBaseRoles.OperationsManager)
+            };
+
+            string noProductWithIdErrorMessage = $"No employees found with Warehouse Id: {warehouseId}";
+            return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader), noProductWithIdErrorMessage, parameters);
+        }
 
     }
 }

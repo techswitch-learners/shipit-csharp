@@ -8,30 +8,14 @@ using ShipIt.Models.DataModels;
 
 namespace ShipIt.Models.ApiModels
 {
-    public enum EmployeeRole
-    {
-        OPERATIONS_MANAGER,
-        PICKER,
-        CLEANER,
-        MANAGER
-    }
-
-    public static class DataBaseRoles
-    {
-        public const string OperationsManager = "operations manager";
-        public const string Picker = "picker";
-        public const string Cleaner = "cleaner";
-        public const string Manager = "manager";
-    }
-
-    public class EmployeeApiModel
+    public class Employee
     {
         public string Name { get; set; }
         public int WarehouseId { get; set; }
         public EmployeeRole role { get; set; }
         public string ext { get; set; }
 
-        public EmployeeApiModel(EmployeeDataModel dataModel)
+        public Employee(EmployeeDataModel dataModel)
         {
             Name = dataModel.Name;
             WarehouseId = dataModel.WarehouseId;
@@ -49,7 +33,7 @@ namespace ShipIt.Models.ApiModels
         }
 
         //Empty constructor needed for Xml serialization
-        public EmployeeApiModel()
+        public Employee()
         {
         }
     }

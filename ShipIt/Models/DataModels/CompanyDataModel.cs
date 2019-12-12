@@ -1,4 +1,6 @@
-﻿namespace ShipIt.Models.DataModels
+﻿using System.Data;
+
+namespace ShipIt.Models.DataModels
 {
     public class CompanyDataModel : DataModel
     {
@@ -20,5 +22,9 @@
         public string Tel { get; set; }
         [DatabaseColumnName("contact_mail")]
         public string Mail { get; set; }
+
+        public CompanyDataModel(IDataReader dataReader) :base(dataReader)
+        {
+        }
     }
 }

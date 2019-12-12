@@ -10,6 +10,7 @@ namespace ShipIt.Repositories
     {
         int GetCount();
         ProductDataModel GetProductByGtin(string gtin);
+        ProductDataModel GetProductById(int id);
         void AddProducts(IEnumerable<ProductDataModel> products);
         void DiscontinueProductByGtin(string gtin);
     }

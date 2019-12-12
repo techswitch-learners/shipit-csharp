@@ -111,18 +111,25 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\InboundOrdersController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Filters\ShipItExceptionFilterAttribute.cs" />
-    <Compile Include="Models\ApiModels\EmployeeApiModel.cs" />
+    <Compile Include="Models\ApiModels\DataBaseRoles.cs" />
+    <Compile Include="Models\ApiModels\Employee.cs" />
+    <Compile Include="Models\ApiModels\CompanyResponse.cs" />
     <Compile Include="Models\ApiModels\EmployeeResponse.cs" />
+    <Compile Include="Models\ApiModels\Company.cs" />
+    <Compile Include="Models\ApiModels\EmployeeRole.cs" />
+    <Compile Include="Models\ApiModels\InboundOrderLine.cs" />
+    <Compile Include="Models\ApiModels\OrderSegment.cs" />
     <Compile Include="Models\ApiModels\ProductResponse.cs" />
     <Compile Include="Exceptions\ClientVisibleException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApiModels\ProductApiModel.cs" />
-    <Compile Include="Models\DataModels\CompanyApiModel.cs" />
     <Compile Include="Models\DataModels\CompanyDataModel.cs" />
     <Compile Include="Models\DataModels\EmployeeDataModel.cs" />
     <Compile Include="Models\DataModels\ProductDataModel.cs" />
@@ -139,12 +146,11 @@
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Startup\WindsorCompositionRoot.cs" />
     <Compile Include="Controllers\StatusController.cs" />
+    <Compile Include="Validators\BaseValidator.cs" />
     <Compile Include="Validators\ProductValidator.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\ResponseModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

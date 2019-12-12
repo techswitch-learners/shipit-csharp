@@ -7,13 +7,13 @@ namespace ShipIt.Models.ApiModels
 {
     public class EmployeeResponse : Response
     {
-        public IEnumerable<EmployeeApiModel> Employees { get; set; }
-        public EmployeeResponse(EmployeeApiModel employee)
+        public IEnumerable<Employee> Employees { get; set; }
+        public EmployeeResponse(Employee employee)
         {
-            Employees = new List<EmployeeApiModel>() {employee};
+            Employees = new List<Employee>() {employee};
             Success = true;
         }
-        public EmployeeResponse(IEnumerable<EmployeeApiModel> employees)
+        public EmployeeResponse(IEnumerable<Employee> employees)
         {
             Employees = employees;
             Success = true;

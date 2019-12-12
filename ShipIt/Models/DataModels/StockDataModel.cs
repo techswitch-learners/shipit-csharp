@@ -1,4 +1,6 @@
-﻿namespace ShipIt.Models.DataModels
+﻿using System.Data;
+
+namespace ShipIt.Models.DataModels
 {
     public class StockDataModel : DataModel
     {
@@ -8,5 +10,7 @@
         public int WarehouseId { get; set; }
         [DatabaseColumnName("hld")]
         public int held { get; set; }
+
+        public StockDataModel(IDataReader dataReader): base(dataReader) { }
     }
 }

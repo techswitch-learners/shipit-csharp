@@ -27,7 +27,7 @@ namespace ShipIt.Controllers
 
         public EmployeeResponse Get(string name)
         {
-            var employee = new EmployeeApiModel(employeeRepository.GetEmployeeByName(name));
+            var employee = new Employee(employeeRepository.GetEmployeeByName(name));
             return new EmployeeResponse(employee);
         }
 
@@ -35,7 +35,7 @@ namespace ShipIt.Controllers
         {
             var employees = employeeRepository
                 .GetEmployeesByWarehouseId(warehouseId)
-                .Select(e => new EmployeeApiModel(e));
+                .Select(e => new Employee(e));
             return new EmployeeResponse(employees);
         }
     }
