@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Linq;
 using Npgsql;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
@@ -99,5 +101,22 @@ namespace ShipIt.Repositories
             return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader), noProductWithIdErrorMessage, parameters);
         }
 
+        public void AddEmployees(IEnumerable<EmployeeDataModel> employees)
+        {
+            string sql = "INSERT INTO em (name, w_id, role, ext) VALUES(@name, @w_id, @role, @ext)";
+
+            foreach (var employee in employees)
+            {
+                var parameters = employee.GetNpgsqlParameters().ToArray();
+                RunQuery(sql, parameters);
+            }
+        }
+
+        public void RemoveEmployee(string name)
+        {
+            string sql = "DELETE FROM em WHERE name = @name";
+            var parameter = new NpgsqlParameter("@name", name);
+            RunQuery(sql, parameter);
+        }
     }
 }
