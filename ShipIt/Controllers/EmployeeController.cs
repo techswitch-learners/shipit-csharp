@@ -34,5 +34,17 @@ namespace ShipIt.Controllers
                 .Select(e => new Employee(e));
             return new EmployeeResponse(employees);
         }
+
+        public void Post([FromBody]AddEmployeesRequest requestModel)
+        {
+            List<Employee> employees = requestModel.Employees;
+
+            if (employees.Count == 0)
+            {
+                throw new MalformedRequestException("Expected at least one <employee> tag");
+            }
+
+            employeeRepository.AddEmployees(employees);
+        }
     }
 }

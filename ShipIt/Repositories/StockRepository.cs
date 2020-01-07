@@ -12,7 +12,7 @@ namespace ShipIt.Repositories
         int GetTrackedItemsCount();
         int GetStockHeldSum();
         IEnumerable<StockDataModel> GetStockByWarehouseId(int id);
-        IEnumerable<int> AddStock(int warehouseId, List<StockAlteration> lineItems);
+        void AddStock(int warehouseId, List<StockAlteration> lineItems);
     }
 
     public class StockRepository : RepositoryBase, IStockRepository
@@ -38,7 +38,7 @@ namespace ShipIt.Repositories
             return base.RunGetQuery(sql, reader => new StockDataModel(reader), noProductWithIdErrorMessage, parameter);
         }
 
-        public List<int> AddStock(int warehouseId, List<StockAlteration> lineItems)
+        public void AddStock(int warehouseId, List<StockAlteration> lineItems)
         {
             var parametersList = new List<NpgsqlParameter[]>();
             foreach (var orderLine in lineItems)

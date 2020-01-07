@@ -15,6 +15,7 @@ namespace ShipIt.Repositories
         EmployeeDataModel GetEmployeeByName(string name);
         IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId);
         EmployeeDataModel GetOperationsManager(int warehouseId);
+        void AddEmployees(List<Employee> employees);
     }
 
     public class EmployeeRepository : RepositoryBase, IEmployeeRepository
