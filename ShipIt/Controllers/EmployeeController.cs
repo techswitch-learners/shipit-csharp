@@ -46,5 +46,23 @@ namespace ShipIt.Controllers
 
             employeeRepository.AddEmployees(employees);
         }
+
+        public void Delete([FromBody]RemoveEmployeeRequest requestModel)
+        {
+            string name = requestModel.Name;
+            if (name == null)
+            {
+                throw new MalformedRequestException("Unable to parse name from request parameters");
+            }
+
+            try
+            {
+                employeeRepository.RemoveEmployee(name);
+            }
+            catch (NoSuchEntityException)
+            {
+                throw new NoSuchEntityException("No employee exists with name: " + name);
+            }
+        }
     }
 }
