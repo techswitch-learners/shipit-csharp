@@ -7,6 +7,7 @@ using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 using ShipIt.Parsers;
 using ShipIt.Repositories;
+using ShipItTest.Builders;
 
 namespace ShipItTest
 {
@@ -17,8 +18,7 @@ namespace ShipItTest
         ProductRepository productRepository = new ProductRepository();
 
         private const int WAREHOUSE_ID = 1;
-
-        //private const Employee EMPLOYEE = new EmployeeBuilder().setWarehouseId(WAREHOUSE_ID).createEmployee();
+        // private static readonly Employee EMPLOYEE = new EmployeeBuilder().setWarehouseId(WAREHOUSE_ID).CreateEmployee();
         private const string GTIN = "0000346374230";
 
         [TestMethod]

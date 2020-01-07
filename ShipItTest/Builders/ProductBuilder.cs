@@ -5,7 +5,7 @@ using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 using ShipIt.Parsers;
 
-namespace ShipItTest
+namespace ShipItTest.Builders
 {
     public class ProductBuilder
     {
@@ -18,7 +18,7 @@ namespace ShipItTest
         private int Discontinued = 0;
         private int MinimumOrderQuantity = 108;
 
-        public ProductBuilder SetId(int id)
+        public ProductBuilder setId(int id)
         {
             Id = id;
             return this;
