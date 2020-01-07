@@ -1,5 +1,7 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Linq;
 using Npgsql;
 using ShipIt.Models.DataModels;
 
@@ -30,6 +32,18 @@ namespace ShipIt.Repositories
             return base.RunSingleGetQuery(sql, reader => new CompanyDataModel(reader), noProductWithIdErrorMessage, parameter);
         }
 
+        public void AddCompanies(IEnumerable<CompanyDataModel> companies)
+        {
+            string sql =
+                "INSERT INTO gcp (gcp_cd, gln_nm, gln_addr_02, gln_addr_03, gln_addr_04, gln_addr_postalcode, gln_addr_city, contact_tel, contact_mail) " +
+                "VALUES (@gcp_cd, @gln_nm, @gln_addr_02, @gln_addr_03, @gln_addr_04, @gln_addr_postalcode, @gln_addr_city, @contact_tel, @contact_mail)"
+
+            foreach(var company in companies)
+            {
+                var parameters = company.GetNpgsqlParameters().ToArray();
+                RunQuery(sql, parameters);
+            }
+        }
     }
 
 }
