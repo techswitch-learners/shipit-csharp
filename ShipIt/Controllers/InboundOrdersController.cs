@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
+using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
+using ShipIt.Parsers;
 using ShipIt.Repositories;
+using ShipIt.Validators;
 
 namespace ShipIt.Controllers
 {
@@ -24,6 +27,7 @@ namespace ShipIt.Controllers
             this.productRepository = productRepository;
         }
 
+        // GET api/status/{warehouseId}
         public InboundOrderResponse Get(int warehouseId)
         {
             var operationsManager = new Employee(employeeRepository.GetOperationsManager(warehouseId));
@@ -63,7 +67,7 @@ namespace ShipIt.Controllers
                 Company = ol.Key
             });
 
-            
+         
 
             return new InboundOrderResponse()
             {
@@ -71,6 +75,47 @@ namespace ShipIt.Controllers
                 WarehouseId = warehouseId,
                 OrderSegments = orderSegments
             };
+        }
+
+        public void Post([FromBody]InboundManifestRequestModel requestModel)
+        {
+            var gtins = new List<string>();
+
+            foreach (var orderLine in requestModel.OrderLines)
+            {
+                gtins.Add(orderLine.gtin);
+            }
+
+            IEnumerable<ProductDataModel> productDataModels = productRepository.GetProductsByGtin(gtins);
+            Dictionary<string, Product> products = productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
+
+            var lineItems = new List<StockAlteration>();
+            var errors = new List<string>();
+
+            foreach (var orderLine in requestModel.OrderLines)
+            {
+                Product product = products[orderLine.gtin];
+                if (product == null)
+                {
+                    errors.Add(String.Format("Unknown product gtin: %s", orderLine.gtin));
+                }
+                else if (product.Gcp.Equals(requestModel.Gcp))
+                {
+                    errors.Add(String.Format("Manifest GCP (%s) doesn't match Product GCP (%s)",
+                        requestModel.Gcp, product));
+                }
+                else
+                {
+                    lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
+                }
+            }
+
+            if (errors.Count() > 0)
+            {
+                throw new ValidationException(String.Format("Found inconsistencies in the inbound manifest: %s", errors));
+            }
+
+            var recordsAffected = stockRepository.AddStock(requestModel.WarehouseId, lineItems);
         }
     }
 }
