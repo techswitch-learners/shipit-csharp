@@ -76,8 +76,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Builders\CompanyBuilder.cs" />
     <Compile Include="Builders\EmployeeBuilder.cs" />
     <Compile Include="Builders\ProductBuilder.cs" />
+    <Compile Include="CompanyTests.cs" />
     <Compile Include="EmployeeTests.cs" />
     <Compile Include="ProductTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

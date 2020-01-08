@@ -21,7 +21,7 @@ namespace ShipIt.Controllers
             return new CompanyResponse(company);
         }
 
-        public void Post([FromBody]AddCompaniesRequest requestModel)
+        public Response Post([FromBody]AddCompaniesRequest requestModel)
         {
             List<Company> companies = requestModel.companies;
 
@@ -31,6 +31,7 @@ namespace ShipIt.Controllers
             }
 
             companyRepository.AddCompanies(companies);
+            return new Response() {Success = true};
         }
     }
 }
