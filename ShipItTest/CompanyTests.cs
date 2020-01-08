@@ -48,7 +48,7 @@ namespace ShipItTest
             try
             {
                 companyController.Get(GCP);
-                Assert.Fail("Expected exceptionto be thrown.");
+                Assert.Fail("Expected exception to be thrown.");
             }
             catch (NoSuchEntityException e)
             {
