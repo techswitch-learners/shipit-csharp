@@ -13,7 +13,6 @@ namespace ShipIt.Controllers
         public int CompanyCount { get; set; }
     }
 
-
     public class StatusController : ApiController
     {
         private IEmployeeRepository employeeRepository;

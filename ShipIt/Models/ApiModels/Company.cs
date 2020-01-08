@@ -1,4 +1,6 @@
 ﻿using ShipIt.Models.DataModels;
+using System;
+using System.Text;
 
 namespace ShipIt.Models.ApiModels
 {
@@ -72,6 +74,21 @@ namespace ShipIt.Models.ApiModels
                 hashCode = (hashCode * 397) ^ (Mail != null ? Mail.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override String ToString()
+        {
+            return new StringBuilder()
+                .AppendFormat("gcp: {0}, ", Gcp)
+                .AppendFormat("name: {0}, ", Name)
+                .AppendFormat("addr2: {0}, ", Addr2)
+                .AppendFormat("addr3: {0}, ", Addr3)
+                .AppendFormat("addr4: {0}, ", Addr4)
+                .AppendFormat("postalCode: {0}, ", PostalCode)
+                .AppendFormat("city: {0}, ", City)
+                .AppendFormat("tel: {0}, ", Tel)
+                .AppendFormat("mail: {0}", Mail)
+                .ToString();
         }
     }
 }

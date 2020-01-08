@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
@@ -8,6 +9,8 @@ namespace ShipIt.Controllers
 {
     public class CompanyController : ApiController
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly ICompanyRepository companyRepository;
 
         public CompanyController(ICompanyRepository companyRepository)
@@ -17,20 +20,35 @@ namespace ShipIt.Controllers
 
         public CompanyResponse Get(string gcp)
         {
-            var company = new Company(companyRepository.GetCompany(gcp));
+            if (gcp == null)
+            {
+                throw new MalformedRequestException("Unable to parse gcp from request parameters");
+            }
+
+            log.Info(String.Format("Looking up company by name: {0}", gcp));
+
+            var companyDataModel = companyRepository.GetCompany(gcp);
+            var company = new Company(companyDataModel);
+
+            log.Info("Found company: " + company.ToString());
+
             return new CompanyResponse(company);
         }
 
         public void Post([FromBody]AddCompaniesRequest requestModel)
         {
-            List<Company> companies = requestModel.companies;
+            List<Company> companiesToAdd = requestModel.companies;
 
-            if (companies.Count == 0)
+            if (companiesToAdd.Count == 0)
             {
                 throw new MalformedRequestException("Expected at least one <company> tag");
             }
 
-            companyRepository.AddCompanies(companies);
+            log.Info("Adding companies: " + companiesToAdd);
+
+            companyRepository.AddCompanies(companiesToAdd);
+
+            log.Debug("Companies added successfully");
         }
     }
 }

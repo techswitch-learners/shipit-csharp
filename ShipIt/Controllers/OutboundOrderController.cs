@@ -12,6 +12,8 @@ namespace ShipIt.Controllers
 {
     public class OutboundOrderController : ApiController
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IStockRepository stockRepository;
         private readonly IProductRepository productRepository;
 
@@ -23,6 +25,8 @@ namespace ShipIt.Controllers
 
         public void Post([FromBody]OutboundOrderRequestModel request)
         {
+            log.Info(String.Format("Processing outbound order: {0}", request));
+
             var gtins = new List<String>();
             foreach (var orderLine in request.OrderLines)
             {
