@@ -131,7 +131,7 @@ namespace ShipIt.Validators
 
             if (gtins.contains(orderLine.getGtin()))
             {
-                addError(String.format("Order contains duplicate GTINs: %s", orderLine.getGtin()));
+                addError(String.format("Order contains duplicate GTINs: {0}", orderLine.getGtin()));
             }
             else
             {

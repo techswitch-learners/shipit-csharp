@@ -14,7 +14,7 @@ namespace ShipIt.Models.ApiModels
 
     public class OrderSegment
     {
-        public List<OrderLine> OrderLines { get; set; }
+        public List<InboundOrderLine> OrderLines { get; set; }
         public Company Company { get; set; } 
     }
 }
