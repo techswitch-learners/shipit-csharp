@@ -29,7 +29,7 @@ namespace ShipIt.Controllers
             this.productRepository = productRepository;
         }
 
-        // GET api/<controller>
+        // GET api/status
         public Status Get()
         {
             return new Status()
@@ -41,21 +41,6 @@ namespace ShipIt.Controllers
                 StockHeld = stockRepository.GetStockHeldSum(),
                 WarehouseCount = employeeRepository.GetWarehouseCount()
             };
-        }
-
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
         }
     }
 }

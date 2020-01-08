@@ -16,6 +16,7 @@ namespace ShipIt.Repositories
         IEnumerable<StockDataModel> GetStockByWarehouseId(int id);
         Dictionary<int, StockDataModel> GetStockByWarehouseAndProductIds(int warehouseId, List<int> productIds);
         void RemoveStock(int warehouseId, List<StockAlteration> lineItems);
+        void AddStock(int warehouseId, List<StockAlteration> lineItems);
     }
 
     public class StockRepository : RepositoryBase, IStockRepository
@@ -48,6 +49,46 @@ namespace ShipIt.Repositories
             string noProductWithIdErrorMessage = $"No stock found with w_id: {warehouseId} and p_ids: {String.Join(",", productIds)}";
             var stock = base.RunGetQuery(sql, reader => new StockDataModel(reader), noProductWithIdErrorMessage, parameter);
             return stock.ToDictionary(s => s.ProductId, s => s);
+        }
+            
+        public void AddStock(int warehouseId, List<StockAlteration> lineItems)
+        {
+            var parametersList = new List<NpgsqlParameter[]>();
+            foreach (var orderLine in lineItems)
+            {
+                parametersList.Add(
+                    new NpgsqlParameter[] {
+                        new NpgsqlParameter("@p_id", orderLine.ProductId),
+                        new NpgsqlParameter("@w_id", warehouseId),
+                        new NpgsqlParameter("@hld", orderLine.Quantity)
+                    });
+            }
+
+            string sql = "INSERT INTO stock (p_id, w_id, hld) VALUES (@p_id, @w_id, @hld) ON DUPLICATE KEY UPDATE hld = hld + @hld";
+
+            var recordsAffected = new List<int>();
+            foreach (var parameters in parametersList)
+            {
+                 recordsAffected.Add(
+                     RunSingleQueryAndReturnRecordsAffected(sql, parameters)
+                 );
+            }
+
+            string errorMessage = null;
+
+            for (int i = 0; i < recordsAffected.Count; i++)
+            {
+                if (recordsAffected[i] == 0)
+                {
+                    errorMessage = String.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
+                        parametersList[i][0], warehouseId, recordsAffected[i]);
+                }
+            }
+
+            if (errorMessage != null)
+            {
+                throw new InvalidStateException(errorMessage);
+            }
         }
 
         public void RemoveStock(int warehouseId, List<StockAlteration> lineItems)
@@ -87,7 +128,7 @@ namespace ShipIt.Repositories
             {
                 if (recordsAffected[i] == 0)
                 {
-                    errorMessage = string.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
+                    errorMessage = String.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
                         parametersList[i][0], warehouseId, recordsAffected[i]);
                 }
             }
@@ -101,5 +142,4 @@ namespace ShipIt.Repositories
             transaction.Commit();
         }
     }
-    
 }

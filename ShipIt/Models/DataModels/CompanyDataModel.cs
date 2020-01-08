@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using ShipIt.Models.ApiModels;
+using System.Data;
 
 namespace ShipIt.Models.DataModels
 {
@@ -25,6 +26,19 @@ namespace ShipIt.Models.DataModels
 
         public CompanyDataModel(IDataReader dataReader) :base(dataReader)
         {
+        }
+
+        public CompanyDataModel(Company company)
+        {
+            this.Gcp = company.Gcp;
+            this.Name = company.Name;
+            this.Addr2 = company.Addr2;
+            this.Addr3 = company.Addr3;
+            this.Addr4 = company.Addr4;
+            this.PostalCode = company.PostalCode;
+            this.City = company.City;
+            this.Tel = company.Tel;
+            this.Mail = company.Mail;
         }
     }
 }

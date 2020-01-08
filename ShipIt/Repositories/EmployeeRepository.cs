@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using Npgsql;
+using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 
@@ -15,6 +16,8 @@ namespace ShipIt.Repositories
         EmployeeDataModel GetEmployeeByName(string name);
         IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId);
         EmployeeDataModel GetOperationsManager(int warehouseId);
+        void AddEmployees(List<Employee> employees);
+        void RemoveEmployee(string name);
     }
 
     public class EmployeeRepository : RepositoryBase, IEmployeeRepository
@@ -115,7 +118,15 @@ namespace ShipIt.Repositories
         {
             string sql = "DELETE FROM em WHERE name = @name";
             var parameter = new NpgsqlParameter("@name", name);
-            RunQuery(sql, parameter);
+            var rowsDeleted = RunSingleQueryAndReturnRecordsAffected(sql, parameter);
+            if (rowsDeleted == 0)
+            {
+                throw new NoSuchEntityException("Incorrect result size: expected 1, actual 0");
+            }
+            else if (rowsDeleted > 1)
+            {
+                throw new InvalidStateException("Unexpectedly deleted " + rowsDeleted + " rows, but expected a single update");
+            }
         }
     }
 }

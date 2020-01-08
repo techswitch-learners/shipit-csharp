@@ -34,7 +34,7 @@ namespace ShipIt.Repositories
                 }
             };
         }
-
+        
         protected void RunSingleQuery(string sql, string noResultsExceptionMessage, params NpgsqlParameter[] parameters)
         {
             using (IDbConnection connection = Connection)
