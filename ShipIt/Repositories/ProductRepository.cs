@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Npgsql;
@@ -10,6 +11,7 @@ namespace ShipIt.Repositories
     {
         int GetCount();
         ProductDataModel GetProductByGtin(string gtin);
+        IEnumerable<ProductDataModel> GetProductsByGtin(List<string> gtins);
         ProductDataModel GetProductById(int id);
         void AddProducts(IEnumerable<ProductDataModel> products);
         void DiscontinueProductByGtin(string gtin);
@@ -29,6 +31,14 @@ namespace ShipIt.Repositories
             string sql = "SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd = @gtin_cd";
             var parameter = new NpgsqlParameter("@gtin_cd", gtin);
             return base.RunSingleGetQuery(sql, reader => new ProductDataModel(reader), $"No products found with gtin of value {gtin}", parameter);
+        }
+
+        public IEnumerable<ProductDataModel> GetProductsByGtin(List<string> gtins)
+        {
+
+            string sql = String.Format("SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd IN ({0})", 
+                String.Join(",", gtins));
+            return base.RunGetQuery(sql, reader => new ProductDataModel(reader), $"No products found with given gtin ids", null);
         }
 
         public ProductDataModel GetProductById(int id)

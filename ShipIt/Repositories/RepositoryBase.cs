@@ -34,7 +34,7 @@ namespace ShipIt.Repositories
                 }
             };
         }
-
+        
         protected void RunSingleQuery(string sql, string noResultsExceptionMessage, params NpgsqlParameter[] parameters)
         {
             using (IDbConnection connection = Connection)
@@ -60,6 +60,31 @@ namespace ShipIt.Repositories
                 {
                     reader.Close();
                 }
+            };
+        }
+
+        protected int RunSingleQueryAndReturnRecordsAffected(string sql, params NpgsqlParameter[] parameters)
+        {
+            using (IDbConnection connection = Connection)
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+                connection.Open();
+                var reader = command.ExecuteReader();
+
+                try
+                {
+                    reader.Read();
+                }
+                finally
+                {
+                    reader.Close();
+                }
+                return reader.RecordsAffected;
             };
         }
 

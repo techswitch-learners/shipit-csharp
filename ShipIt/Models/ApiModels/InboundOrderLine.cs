@@ -10,5 +10,9 @@ namespace ShipIt.Models.ApiModels
         public string gtin { get; set; }
         public string name { get; set; }
         public int quantity { get; set; }
+
+        public OrderLine()
+        {
+        }
     }
 }
