@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Web;
 using Mono.Security.Authenticode;
 using ShipIt.Models.DataModels;
@@ -35,6 +36,16 @@ namespace ShipIt.Models.ApiModels
         //Empty constructor needed for Xml serialization
         public Employee()
         {
+        }
+
+        public override String ToString()
+        {
+            return new StringBuilder()
+                    .AppendFormat("name: {0}, ", Name)
+                    .AppendFormat("warehouseId: {0}, ", WarehouseId)
+                    .AppendFormat("role: {0}, ", role)
+                    .AppendFormat("ext: {0}", ext)
+                    .ToString();
         }
     }
 }

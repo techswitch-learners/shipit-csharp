@@ -14,6 +14,8 @@ namespace ShipIt.Controllers
 {
     public class InboundOrderController : ApiController
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IEmployeeRepository employeeRepository;
         private readonly ICompanyRepository companyRepository;
         private readonly IProductRepository productRepository;
@@ -30,7 +32,12 @@ namespace ShipIt.Controllers
         // GET api/status/{warehouseId}
         public InboundOrderResponse Get(int warehouseId)
         {
+            log.Info("orderIn for warehouseId: " + warehouseId);
+
             var operationsManager = new Employee(employeeRepository.GetOperationsManager(warehouseId));
+
+            log.Debug(String.Format("Found operations manager: {0}", operationsManager));
+
             var allStock = stockRepository.GetStockByWarehouseId(warehouseId);
 
             Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany = new Dictionary<Company, List<InboundOrderLine>>();
@@ -61,13 +68,15 @@ namespace ShipIt.Controllers
                 }
             }
 
+            log.Debug(String.Format("Constructed order lines: {0}", orderlinesByCompany));
+
             var orderSegments = orderlinesByCompany.Select(ol => new OrderSegment()
             {
                 OrderLines = ol.Value,
                 Company = ol.Key
             });
 
-         
+            log.Info("Constructed inbound order");
 
             return new InboundOrderResponse()
             {
@@ -79,6 +88,8 @@ namespace ShipIt.Controllers
 
         public void Post([FromBody]InboundManifestRequestModel requestModel)
         {
+            log.Info("Processing manifest: " + requestModel);
+
             var gtins = new List<string>();
 
             foreach (var orderLine in requestModel.OrderLines)
@@ -88,6 +99,8 @@ namespace ShipIt.Controllers
 
             IEnumerable<ProductDataModel> productDataModels = productRepository.GetProductsByGtin(gtins);
             Dictionary<string, Product> products = productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
+
+            log.Debug(String.Format("Retrieved products to verify manifest: {0}", products));
 
             var lineItems = new List<StockAlteration>();
             var errors = new List<string>();
@@ -112,10 +125,13 @@ namespace ShipIt.Controllers
 
             if (errors.Count() > 0)
             {
+                log.Debug(String.Format("Found errors with inbound manifest: {0}", errors));
                 throw new ValidationException(String.Format("Found inconsistencies in the inbound manifest: {0}", errors));
             }
 
+            log.Debug(String.Format("Increasing stock levels with manifest: {0}", requestModel));
             stockRepository.AddStock(requestModel.WarehouseId, lineItems);
+            log.Info("Stock levels increased");
         }
     }
 }
