@@ -16,7 +16,7 @@ namespace ShipIt.Repositories
         EmployeeDataModel GetEmployeeByName(string name);
         IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId);
         EmployeeDataModel GetOperationsManager(int warehouseId);
-        void AddEmployees(List<Employee> employees);
+        void AddEmployees(IEnumerable<Employee> employees);
         void RemoveEmployee(string name);
     }
 
@@ -103,13 +103,14 @@ namespace ShipIt.Repositories
             return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader), noProductWithIdErrorMessage, parameters);
         }
 
-        public void AddEmployees(IEnumerable<EmployeeDataModel> employees)
+        public void AddEmployees(IEnumerable<Employee> employees)
         {
             string sql = "INSERT INTO em (name, w_id, role, ext) VALUES(@name, @w_id, @role, @ext)";
 
             foreach (var employee in employees)
             {
-                var parameters = employee.GetNpgsqlParameters().ToArray();
+                var employeeDataModel = new EmployeeDataModel(employee);
+                var parameters = employeeDataModel.GetNpgsqlParameters().ToArray();
                 RunQuery(sql, parameters);
             }
         }
