@@ -97,11 +97,11 @@ namespace ShipIt.Controllers
                 Product product = products[orderLine.gtin];
                 if (product == null)
                 {
-                    errors.Add(String.Format("Unknown product gtin: %s", orderLine.gtin));
+                    errors.Add(String.Format("Unknown product gtin: {0}", orderLine.gtin));
                 }
                 else if (product.Gcp.Equals(requestModel.Gcp))
                 {
-                    errors.Add(String.Format("Manifest GCP (%s) doesn't match Product GCP (%s)",
+                    errors.Add(String.Format("Manifest GCP ({0}) doesn't match Product GCP ({1})",
                         requestModel.Gcp, product));
                 }
                 else
@@ -112,10 +112,10 @@ namespace ShipIt.Controllers
 
             if (errors.Count() > 0)
             {
-                throw new ValidationException(String.Format("Found inconsistencies in the inbound manifest: %s", errors));
+                throw new ValidationException(String.Format("Found inconsistencies in the inbound manifest: {0}", errors));
             }
 
-            var recordsAffected = stockRepository.AddStock(requestModel.WarehouseId, lineItems);
+            stockRepository.AddStock(requestModel.WarehouseId, lineItems);
         }
     }
 }

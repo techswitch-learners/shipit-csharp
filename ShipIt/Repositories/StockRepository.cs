@@ -67,7 +67,7 @@ namespace ShipIt.Repositories
             {
                 if (recordsAffected[i] == 0)
                 {
-                    errorMessage = String.Format("Product %s in warehouse %s was unexpectedly not updated (rows updated returned %s)",
+                    errorMessage = String.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
                         parametersList[i][0], warehouseId, recordsAffected[i]);
                 }
             }
