@@ -11,7 +11,7 @@ namespace ShipIt.Repositories
 {
     public abstract class RepositoryBase
     {
-        private IDbConnection Connection =>
+        protected IDbConnection Connection =>
             new NpgsqlConnection(ConfigurationManager.ConnectionStrings["MyPostgres"].ConnectionString);
 
         protected long QueryForLong(string sqlString)
@@ -60,6 +60,31 @@ namespace ShipIt.Repositories
                 {
                     reader.Close();
                 }
+            };
+        }
+
+        protected int RunSingleQueryAndReturnRecordsAffected(string sql, params NpgsqlParameter[] parameters)
+        {
+            using (IDbConnection connection = Connection)
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = sql;
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+                connection.Open();
+                var reader = command.ExecuteReader();
+
+                try
+                {
+                    reader.Read();
+                }
+                finally
+                {
+                    reader.Close();
+                }
+                return reader.RecordsAffected;
             };
         }
 

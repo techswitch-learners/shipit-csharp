@@ -114,6 +114,7 @@
     <Compile Include="Controllers\InboundOrdersController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\OutboundOrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Exceptions\ErrorCode.cs" />
     <Compile Include="Exceptions\InsufficientStockException.cs" />
@@ -121,6 +122,8 @@
     <Compile Include="Exceptions\MalformedRequestException.cs" />
     <Compile Include="Exceptions\NoSuchEntityException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Models\ApiModels\OrderLine.cs" />
+    <Compile Include="Models\ApiModels\OutboundOrderRequestModel.cs" />
     <Compile Include="Models\ApiModels\ProductsRequestModel.cs" />
     <Compile Include="Filters\ShipItExceptionFilterAttribute.cs" />
     <Compile Include="Models\ApiModels\DataBaseRoles.cs" />
@@ -137,6 +140,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApiModels\Product.cs" />
+    <Compile Include="Models\ApiModels\StockAlteration.cs" />
     <Compile Include="Models\DataModels\CompanyDataModel.cs" />
     <Compile Include="Models\DataModels\EmployeeDataModel.cs" />
     <Compile Include="Models\DataModels\ProductDataModel.cs" />
