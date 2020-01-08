@@ -115,5 +115,35 @@ namespace ShipItTest.Builders
                 } 
             }; 
         }
+
+        public ProductsRequestModel CreateDuplicateProductRequest()
+        {
+            return new ProductsRequestModel()
+            {
+                Products = new List<ProductRequestModel>()
+                {
+                    new ProductRequestModel()
+                    {
+                        Discontinued = this.Discontinued == 1 ? "true" : "false",
+                        Gcp = this.Gcp,
+                        Gtin = this.Gtin,
+                        LowerThreshold = this.LowerThreshold.ToString(),
+                        MinimumOrderQuantity = this.MinimumOrderQuantity.ToString(),
+                        Name = this.Name,
+                        Weight = this.Weight.ToString()
+                    },
+                    new ProductRequestModel()
+                    {
+                        Discontinued = this.Discontinued == 1 ? "true" : "false",
+                        Gcp = this.Gcp,
+                        Gtin = this.Gtin,
+                        LowerThreshold = this.LowerThreshold.ToString(),
+                        MinimumOrderQuantity = this.MinimumOrderQuantity.ToString(),
+                        Name = this.Name,
+                        Weight = this.Weight.ToString()
+                    }
+                }
+            };
+        }
     }
 }

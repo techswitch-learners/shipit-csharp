@@ -100,9 +100,12 @@ namespace ShipIt.Repositories
             {
                 var command = connection.CreateCommand();
                 command.CommandText = sql;
-                foreach (var parameter in parameters)
+                if (parameters != null)
                 {
-                    command.Parameters.Add(parameter);
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
                 }
                 connection.Open();
                 var reader = command.ExecuteReader();

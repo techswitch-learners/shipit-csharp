@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Npgsql;
+using ShipIt.Exceptions;
 using ShipIt.Models.DataModels;
 
 namespace ShipIt.Repositories
@@ -36,8 +37,8 @@ namespace ShipIt.Repositories
         public IEnumerable<ProductDataModel> GetProductsByGtin(List<string> gtins)
         {
 
-            string sql = String.Format("SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd IN ({0})", 
-                String.Join(",", gtins));
+            string sql = String.Format("SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd IN ('{0}')", 
+                String.Join("',", gtins));
             return base.RunGetQuery(sql, reader => new ProductDataModel(reader), $"No products found with given gtin ids", null);
         }
 
@@ -64,12 +65,38 @@ namespace ShipIt.Repositories
             string sql = "INSERT INTO gtin (gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt) VALUES (@gtin_cd, @gcp_cd, @gtin_nm, @m_g, @l_th, @ds, @min_qt)";
 
             var parametersList = new List<NpgsqlParameter[]>();
+            var gtins = new List<string>();
+
             foreach (var product in products)
             {
+                if (gtins.Contains(product.Gtin))
+                {
+                    throw new MalformedRequestException($"Cannot add products with duplicate gtins: {product.Gtin}");
+                }
+                gtins.Add(product.Gtin);
                 parametersList.Add(product.GetNpgsqlParameters().ToArray());
             }
 
+            var conflicts = TryGetProductsByGtin(gtins);
+            if (conflicts.Any())
+            {
+                throw new MalformedRequestException($"Cannot add products with existing gtins: {string.Join(", ", conflicts.Select(c => c.Gtin))}");
+            }
+
             RunTransaction(sql, parametersList);
+        }
+
+        private IEnumerable<ProductDataModel> TryGetProductsByGtin(List<string> gtins)
+        {
+            try
+            {
+                var products = GetProductsByGtin(gtins).ToList();
+                return products;
+            }
+            catch (NoSuchEntityException)
+            {
+                return new List<ProductDataModel>();
+            }
         }
     }
 }

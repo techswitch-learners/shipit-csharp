@@ -18,6 +18,7 @@ namespace ShipItTest
         ProductRepository productRepository = new ProductRepository();
 
         private const int WAREHOUSE_ID = 1;
+
         // private static readonly Employee EMPLOYEE = new EmployeeBuilder().setWarehouseId(WAREHOUSE_ID).CreateEmployee();
         private const string GTIN = "0000346374230";
 
@@ -83,6 +84,87 @@ namespace ShipItTest
 
             Assert.IsTrue(response.Success);
             ProductsAreEqual(new Product(databaseProduct), new Product(correctDatabaseProduct));
+        }
+
+        [TestMethod]
+        public void TestAddPreexistingProduct()
+        {
+            onSetUp();
+            var productBuilder = new ProductBuilder().setGtin(GTIN);
+            productRepository.AddProducts(new List<ProductDataModel>() {productBuilder.CreateProductDatabaseModel()});
+            var productRequest = productBuilder.CreateProductRequest();
+
+            try
+            {
+                productController.Post(productRequest);
+                Assert.Fail();
+            }
+            catch (MalformedRequestException e)
+            {
+                Assert.IsTrue(e.Message.Contains(GTIN));
+            }
+        }
+
+        [TestMethod]
+        public void TestAddDuplicateProduct()
+        {
+            onSetUp();
+            var productBuilder = new ProductBuilder().setGtin(GTIN);
+            var productRequest = productBuilder.CreateDuplicateProductRequest();
+
+            try
+            {
+                productController.Post(productRequest);
+                Assert.Fail("Expected exception to be thrown.");
+            }
+            catch (MalformedRequestException e)
+            {
+                Assert.IsTrue(e.Message.Contains(GTIN));
+            }
+        }
+
+        [TestMethod]
+        public void TestDiscontinueProduct()
+        {
+            onSetUp();
+            var productBuilder = new ProductBuilder().setGtin(GTIN);
+            productRepository.AddProducts(new List<ProductDataModel>() { productBuilder.CreateProductDatabaseModel() });
+
+            productController.Discontinue(GTIN);
+            var result = productController.Get(GTIN);
+
+            Assert.IsTrue(result.Product.Discontinued);
+        }
+
+        [TestMethod]
+        public void TestDiscontinueNonexistentProduct()
+        {
+            onSetUp();
+            try
+            {
+                productController.Discontinue(GTIN);
+                Assert.Fail("Expected exception to be thrown.");
+            }
+            catch (NoSuchEntityException e)
+            {
+                Assert.IsTrue(e.Message.Contains(GTIN));
+            }
+        }
+
+        [TestMethod]
+        public void TestDiscontinueNonexistantProduct()
+        {
+            onSetUp();
+            var nonExistantGtin = "12345678";
+            try
+            {
+                productController.Discontinue(nonExistantGtin);
+                Assert.Fail("Expected exception to be thrown.");
+            }
+            catch (NoSuchEntityException e)
+            {
+                Assert.IsTrue(e.Message.Contains(nonExistantGtin));
+            }
         }
     }
 }
