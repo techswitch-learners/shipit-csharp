@@ -41,24 +41,14 @@ namespace ShipIt.Repositories
                 "INSERT INTO gcp (gcp_cd, gln_nm, gln_addr_02, gln_addr_03, gln_addr_04, gln_addr_postalcode, gln_addr_city, contact_tel, contact_mail) " +
                 "VALUES (@gcp_cd, @gln_nm, @gln_addr_02, @gln_addr_03, @gln_addr_04, @gln_addr_postalcode, @gln_addr_city, @contact_tel, @contact_mail)";
 
-            var transaction = Connection.BeginTransaction();
-
-            try
+            var parametersList = new List<NpgsqlParameter[]>();
+            foreach (var company in companies)
             {
-                foreach (var company in companies)
-                {
-                    var companyDataModel = new CompanyDataModel(company);
-                    var parameters = companyDataModel.GetNpgsqlParameters().ToArray();
-                    RunQuery(sql, parameters);
-                }
-            }
-            catch (Exception)
-            {
-                transaction.Rollback();
-                throw;
+                var companyDataModel = new CompanyDataModel(company);
+                parametersList.Add(companyDataModel.GetNpgsqlParameters().ToArray());
             }
 
-            transaction.Commit();
+            base.RunTransaction(sql, parametersList);
         }
     }
 

@@ -63,23 +63,13 @@ namespace ShipIt.Repositories
         {
             string sql = "INSERT INTO gtin (gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt) VALUES (@gtin_cd, @gcp_cd, @gtin_nm, @m_g, @l_th, @ds, @min_qt)";
 
-            var transaction = Connection.BeginTransaction();
-
-            try
+            var parametersList = new List<NpgsqlParameter[]>();
+            foreach (var product in products)
             {
-                foreach (var product in products)
-                {
-                    var parameters = product.GetNpgsqlParameters().ToArray();
-                    RunQuery(sql, parameters);
-                }
-            }
-            catch (Exception)
-            {
-                transaction.Rollback();
-                throw;
+                parametersList.Add(product.GetNpgsqlParameters().ToArray());
             }
 
-            transaction.Commit();
+            RunTransaction(sql, parametersList);
         }
     }
 }

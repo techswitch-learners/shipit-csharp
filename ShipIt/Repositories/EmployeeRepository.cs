@@ -108,23 +108,14 @@ namespace ShipIt.Repositories
         {
             string sql = "INSERT INTO em (name, w_id, role, ext) VALUES(@name, @w_id, @role, @ext)";
             
-            var transaction = Connection.BeginTransaction();
+            var parametersList = new List<NpgsqlParameter[]>();
+            foreach (var employee in employees)
+            {
+                var employeeDataModel = new EmployeeDataModel(employee);
+                parametersList.Add(employeeDataModel.GetNpgsqlParameters().ToArray());
+            }
 
-            try
-            {
-                foreach (var employee in employees)
-                {
-                    var employeeDataModel = new EmployeeDataModel(employee);
-                    var parameters = employeeDataModel.GetNpgsqlParameters().ToArray();
-                    RunQuery(sql, parameters);
-                }
-            }
-            catch (Exception)
-            {
-                transaction.Rollback();
-                throw;
-            }
-            transaction.Commit();
+            base.RunTransaction(sql, parametersList);
         }
 
         public void RemoveEmployee(string name)

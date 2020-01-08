@@ -105,41 +105,7 @@ namespace ShipIt.Repositories
                 });
             }
 
-            var transaction = Connection.BeginTransaction();
-            var recordsAffected = new List<int>();
-            try
-            {
-                foreach (var parameters in parametersList)
-                {
-                    recordsAffected.Add(
-                        RunSingleQueryAndReturnRecordsAffected(sql, parameters)
-                    );
-                }
-            }
-            catch (Exception)
-            {
-                transaction.Rollback();
-                throw;
-            }
-
-            string errorMessage = null;
-
-            for (int i = 0; i < recordsAffected.Count; i++)
-            {
-                if (recordsAffected[i] == 0)
-                {
-                    errorMessage = String.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
-                        parametersList[i][0], warehouseId, recordsAffected[i]);
-                }
-            }
-
-            if (errorMessage != null)
-            {
-                transaction.Rollback();
-                throw new InvalidStateException(errorMessage);
-            }
-
-            transaction.Commit();
+            base.RunTransaction(sql, parametersList);
         }
     }
 }

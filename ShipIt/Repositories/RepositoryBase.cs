@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using System.Web.UI.WebControls.WebParts;
 using Npgsql;
 using ShipIt.Exceptions;
 
@@ -125,6 +126,7 @@ namespace ShipIt.Repositories
                 }
             };
         }
+
         protected void RunQuery(string sql, params NpgsqlParameter[] parameters)
         {
             using (IDbConnection connection = Connection)
@@ -147,6 +149,51 @@ namespace ShipIt.Repositories
                     reader.Close();
                 }
             };
+        }
+
+        protected void RunTransaction(string sql, List<NpgsqlParameter[]> parametersList)
+        {
+            using (IDbConnection connection = Connection)
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                var transaction = connection.BeginTransaction();
+                command.Transaction = transaction;
+                var recordsAffected = new List<int>();
+
+                try
+                {
+                    foreach (var parameters in parametersList)
+                    {
+                        command.CommandText = sql;
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.Add(parameter);
+                        }
+
+                        recordsAffected.Add(command.ExecuteNonQuery());
+                    }
+
+                    for (int i = 0; i < recordsAffected.Count; i++)
+                    {
+                        if (recordsAffected[i] == 0)
+                        {
+                            throw new Exception();
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
     }
 }
