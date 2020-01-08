@@ -11,7 +11,7 @@ namespace ShipIt.Repositories
 {
     public abstract class RepositoryBase
     {
-        private IDbConnection Connection =>
+        protected IDbConnection Connection =>
             new NpgsqlConnection(ConfigurationManager.ConnectionStrings["MyPostgres"].ConnectionString);
 
         protected long QueryForLong(string sqlString)

@@ -114,6 +114,7 @@
     <Compile Include="Controllers\InboundOrdersController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\OutboundOrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Exceptions\ErrorCode.cs" />
     <Compile Include="Exceptions\InsufficientStockException.cs" />
@@ -124,6 +125,8 @@
     <Compile Include="Models\ApiModels\AddCompaniesRequest.cs" />
     <Compile Include="Models\ApiModels\AddEmployeesRequest.cs" />
     <Compile Include="Models\ApiModels\AddProductsRequestModel.cs" />
+    <Compile Include="Models\ApiModels\OrderLine.cs" />
+    <Compile Include="Models\ApiModels\OutboundOrderRequestModel.cs" />
     <Compile Include="Models\ApiModels\ProductsRequestModel.cs" />
     <Compile Include="Filters\ShipItExceptionFilterAttribute.cs" />
     <Compile Include="Models\ApiModels\DataBaseRoles.cs" />
