@@ -35,7 +35,7 @@ namespace ShipIt.Controllers
             return new EmployeeResponse(employees);
         }
 
-        public void Post([FromBody]AddEmployeesRequest requestModel)
+        public Response Post([FromBody]AddEmployeesRequest requestModel)
         {
             List<Employee> employees = requestModel.Employees;
 
@@ -45,6 +45,7 @@ namespace ShipIt.Controllers
             }
 
             employeeRepository.AddEmployees(employees);
+            return new Response() { Success = true };
         }
 
         public void Delete([FromBody]RemoveEmployeeRequest requestModel)

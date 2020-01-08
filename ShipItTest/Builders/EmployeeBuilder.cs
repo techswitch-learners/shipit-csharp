@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ShipIt.Models.ApiModels;
+using ShipIt.Models.DataModels;
 
 namespace ShipItTest.Builders
 {
@@ -37,6 +38,17 @@ namespace ShipItTest.Builders
             return this;
         }
 
+        public EmployeeDataModel CreateEmployeeDataModel()
+        {
+            return new EmployeeDataModel()
+            {
+                Name = this.Name,
+                WarehouseId = this.WarehouseId,
+                Role = this.Role.ToString(),
+                Ext = this.Ext
+            };
+        }
+
         public Employee CreateEmployee()
         {
             return new Employee() {
@@ -44,6 +56,23 @@ namespace ShipItTest.Builders
                 WarehouseId = this.WarehouseId,
                 role = this.Role,
                 ext = this.Ext
+            };
+        }
+
+        public AddEmployeesRequest CreateAddEmployeesRequest()
+        {
+            return new AddEmployeesRequest()
+            {
+                Employees = new List<Employee>()
+                {
+                    new Employee()
+                    {
+                        Name = this.Name,
+                        WarehouseId = this.WarehouseId,
+                        role = this.Role,
+                        ext = this.Ext
+                    }
+                }
             };
         }
     }

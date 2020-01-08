@@ -21,6 +21,9 @@ namespace ShipIt.Models.DataModels
         public EmployeeDataModel(IDataReader dataReader) : base(dataReader)
         { }
 
+        public EmployeeDataModel()
+        { }
+
         public EmployeeDataModel(Employee employee)
         {
             this.Name = employee.Name;

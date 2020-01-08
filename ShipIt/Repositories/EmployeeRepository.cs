@@ -85,7 +85,7 @@ namespace ShipIt.Repositories
         {
 
             string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id";
-            var parameter = new NpgsqlParameter("@name", warehouseId);
+            var parameter = new NpgsqlParameter("@w_id", warehouseId);
             string noProductWithIdErrorMessage = $"No employees found with Warehouse Id: {warehouseId}";
             return base.RunGetQuery(sql, reader => new EmployeeDataModel(reader), noProductWithIdErrorMessage, parameter);
         }

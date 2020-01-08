@@ -45,18 +45,6 @@ namespace ShipItTest
             Assert.IsTrue(result.Success);
         }
 
-        private bool ProductsAreEqual(Product A, Product B)
-        {
-            const double floatingPointTolerance = 10 * float.Epsilon;
-            return A.Discontinued == B.Discontinued
-                   && A.Gcp == B.Gcp
-                   && A.Gtin == B.Gtin
-                   && A.LowerThreshold == B.LowerThreshold
-                   && A.MinimumOrderQuantity == B.MinimumOrderQuantity
-                   && A.Name == B.Name
-                   && Math.Abs(A.Weight - B.Weight) < floatingPointTolerance;
-        }
-
         [TestMethod]
         public void TestGetNonexistentProduct()
         {
@@ -134,6 +122,7 @@ namespace ShipItTest
             var result = productController.Get(GTIN);
 
             Assert.IsTrue(result.Product.Discontinued);
+            Assert.IsTrue(result.Success);
         }
 
         [TestMethod]
@@ -165,6 +154,18 @@ namespace ShipItTest
             {
                 Assert.IsTrue(e.Message.Contains(nonExistantGtin));
             }
+        }
+
+        private bool ProductsAreEqual(Product A, Product B)
+        {
+            const double floatingPointTolerance = 10 * float.Epsilon;
+            return A.Discontinued == B.Discontinued
+                   && A.Gcp == B.Gcp
+                   && A.Gtin == B.Gtin
+                   && A.LowerThreshold == B.LowerThreshold
+                   && A.MinimumOrderQuantity == B.MinimumOrderQuantity
+                   && A.Name == B.Name
+                   && Math.Abs(A.Weight - B.Weight) < floatingPointTolerance;
         }
     }
 }
