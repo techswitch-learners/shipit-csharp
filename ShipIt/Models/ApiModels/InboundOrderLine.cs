@@ -11,7 +11,7 @@ namespace ShipIt.Models.ApiModels
         public string name { get; set; }
         public int quantity { get; set; }
 
-        public OrderLine()
+        public InboundOrderLine()
         {
         }
     }
