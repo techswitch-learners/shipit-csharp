@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -106,13 +107,24 @@ namespace ShipIt.Repositories
         public void AddEmployees(IEnumerable<Employee> employees)
         {
             string sql = "INSERT INTO em (name, w_id, role, ext) VALUES(@name, @w_id, @role, @ext)";
+            
+            var transaction = Connection.BeginTransaction();
 
-            foreach (var employee in employees)
+            try
             {
-                var employeeDataModel = new EmployeeDataModel(employee);
-                var parameters = employeeDataModel.GetNpgsqlParameters().ToArray();
-                RunQuery(sql, parameters);
+                foreach (var employee in employees)
+                {
+                    var employeeDataModel = new EmployeeDataModel(employee);
+                    var parameters = employeeDataModel.GetNpgsqlParameters().ToArray();
+                    RunQuery(sql, parameters);
+                }
             }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+            transaction.Commit();
         }
 
         public void RemoveEmployee(string name)

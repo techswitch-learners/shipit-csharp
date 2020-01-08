@@ -33,7 +33,7 @@ namespace ShipIt.Controllers
             var operationsManager = new Employee(employeeRepository.GetOperationsManager(warehouseId));
             var allStock = stockRepository.GetStockByWarehouseId(warehouseId);
 
-            Dictionary<Company, List<OrderLine>> orderlinesByCompany = new Dictionary<Company, List<OrderLine>>();
+            Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany = new Dictionary<Company, List<InboundOrderLine>>();
             foreach (var stock in allStock)
             {
                 Product product = new Product(productRepository.GetProductById(stock.ProductId));
@@ -48,11 +48,11 @@ namespace ShipIt.Controllers
 
                     if (!orderlinesByCompany.ContainsKey(company))
                     {
-                        orderlinesByCompany.Add(company, new List<OrderLine>());
+                        orderlinesByCompany.Add(company, new List<InboundOrderLine>());
                     }
 
                     orderlinesByCompany[company].Add( 
-                        new OrderLine()
+                        new InboundOrderLine()
                         {
                             gtin = product.Gtin,
                             name = product.Name,
