@@ -23,9 +23,14 @@ namespace ShipIt.Controllers
 
         public void Post([FromBody]OutboundOrderRequestModel request)
         {
-            var gtins = new List<String>();
+            var gtins = new List<string>();
+
             foreach (var orderLine in request.OrderLines)
             {
+                if (gtins.Contains(orderLine.gtin))
+                {
+                    throw new ValidationException(String.Format("Outbound order request contains duplicate product gtin: {0}", orderLine.gtin));
+                }
                 gtins.Add(orderLine.gtin);
             }
 
@@ -38,13 +43,13 @@ namespace ShipIt.Controllers
 
             foreach (var orderLine in request.OrderLines)
             {
-                var product = products[orderLine.gtin];
-                if (product == null)
+                if (!products.ContainsKey(orderLine.gtin))
                 {
                     errors.Add($"Unknown product gtin: {orderLine.gtin}");
                 }
                 else
                 {
+                    var product = products[orderLine.gtin];
                     lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
                     productIds.Add(product.Id);
                 }
@@ -65,12 +70,14 @@ namespace ShipIt.Controllers
                 var lineItem = lineItems[i];
                 var orderLine = orderLines[i];
 
-                var item = stock[lineItem.ProductId];
-                if (item == null)
+                if (!stock.ContainsKey(lineItem.ProductId))
                 {
                     errors.Add($"Product: {orderLine.gtin}, no stock held");
+                    continue;
                 }
-                else if (lineItem.Quantity > item.held)
+
+                var item = stock[lineItem.ProductId];
+                if (lineItem.Quantity > item.held)
                 {
                     errors.Add(
                         $"Product: {orderLine.gtin}, stock held: {item.held}, stock to remove: {lineItem.Quantity}");
