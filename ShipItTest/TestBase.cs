@@ -12,7 +12,7 @@ namespace ShipItTest
     public abstract class AbstractBaseTest
     {
 
-        protected EmployeeRepository EmployeeRepositor { get; set; }
+        protected EmployeeRepository EmployeeRepository { get; set; }
         protected ProductRepository ProductRepository { get; set; }
         protected CompanyRepository CompanyRepository { get; set; }
         protected StockRepository StockRepository { get; set; }

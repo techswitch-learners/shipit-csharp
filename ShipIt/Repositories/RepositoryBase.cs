@@ -169,6 +169,8 @@ namespace ShipIt.Repositories
                     foreach (var parameters in parametersList)
                     {
                         command.CommandText = sql;
+                        command.Parameters.Clear();
+
                         foreach (var parameter in parameters)
                         {
                             command.Parameters.Add(parameter);

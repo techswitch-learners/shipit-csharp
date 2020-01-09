@@ -52,15 +52,14 @@ namespace ShipItTest
             var employeeBuilderA = new EmployeeBuilder().setWarehouseId(WAREHOUSE_ID).setName("A");
             var employeeBuilderB = new EmployeeBuilder().setWarehouseId(WAREHOUSE_ID).setName("B");
             employeeRepository.AddEmployees(new List<Employee>() { employeeBuilderA.CreateEmployee(), employeeBuilderB.CreateEmployee() });
-            var result = employeeController.Get(WAREHOUSE_ID);
+            var result = employeeController.Get(WAREHOUSE_ID).Employees.ToList();
 
             var correctEmployeeA = employeeBuilderA.CreateEmployee();
             var correctEmployeeB = employeeBuilderB.CreateEmployee();
 
-            Assert.IsTrue(result.Employees.Count() == 2);
-            Assert.IsTrue(EmployeesAreEqual(correctEmployeeA, result.Employees.First()));
-            Assert.IsTrue(EmployeesAreEqual(correctEmployeeB, result.Employees.Last()));
-            Assert.IsTrue(result.Success);
+            Assert.IsTrue(result.Count == 2);
+            Assert.IsTrue(EmployeesAreEqual(correctEmployeeA, result.First()));
+            Assert.IsTrue(EmployeesAreEqual(correctEmployeeB, result.Last()));
         }
 
         [TestMethod]

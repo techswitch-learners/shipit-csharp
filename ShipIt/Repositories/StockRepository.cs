@@ -64,7 +64,8 @@ namespace ShipIt.Repositories
                     });
             }
 
-            string sql = "INSERT INTO stock (p_id, w_id, hld) VALUES (@p_id, @w_id, @hld) ON DUPLICATE KEY UPDATE hld = hld + @hld";
+            string sql = "INSERT INTO stock (p_id, w_id, hld) VALUES (@p_id, @w_id, @hld) "
+                         + "ON CONFLICT (p_id, w_id) DO UPDATE SET hld = stock.hld + EXCLUDED.hld";
 
             var recordsAffected = new List<int>();
             foreach (var parameters in parametersList)
