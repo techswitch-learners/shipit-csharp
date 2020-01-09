@@ -38,7 +38,7 @@ namespace ShipIt.Repositories
         {
 
             string sql = String.Format("SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd IN ('{0}')", 
-                String.Join("',", gtins));
+                String.Join("','", gtins));
             return base.RunGetQuery(sql, reader => new ProductDataModel(reader), $"No products found with given gtin ids", null);
         }
 

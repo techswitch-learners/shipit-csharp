@@ -67,8 +67,6 @@ namespace ShipIt.Controllers
                 Company = ol.Key
             });
 
-         
-
             return new InboundOrderResponse()
             {
                 OperationsManager = operationsManager,
@@ -83,6 +81,10 @@ namespace ShipIt.Controllers
 
             foreach (var orderLine in requestModel.OrderLines)
             {
+                if (gtins.Contains(orderLine.gtin))
+                {
+                    throw new ValidationException(String.Format("Manifest contains duplicate product gtin: {0}", orderLine.gtin));
+                }
                 gtins.Add(orderLine.gtin);
             }
 
@@ -94,15 +96,17 @@ namespace ShipIt.Controllers
 
             foreach (var orderLine in requestModel.OrderLines)
             {
-                Product product = products[orderLine.gtin];
-                if (product == null)
+                if (!products.ContainsKey(orderLine.gtin))
                 {
                     errors.Add(String.Format("Unknown product gtin: {0}", orderLine.gtin));
+                    continue;
                 }
-                else if (product.Gcp.Equals(requestModel.Gcp))
+
+                Product product = products[orderLine.gtin];
+                if (!product.Gcp.Equals(requestModel.Gcp))
                 {
                     errors.Add(String.Format("Manifest GCP ({0}) doesn't match Product GCP ({1})",
-                        requestModel.Gcp, product));
+                        requestModel.Gcp, product.Gcp));
                 }
                 else
                 {
@@ -112,7 +116,7 @@ namespace ShipIt.Controllers
 
             if (errors.Count() > 0)
             {
-                throw new ValidationException(String.Format("Found inconsistencies in the inbound manifest: {0}", errors));
+                throw new ValidationException(String.Format("Found inconsistencies in the inbound manifest: {0}", String.Join("; ", errors)));
             }
 
             stockRepository.AddStock(requestModel.WarehouseId, lineItems);
