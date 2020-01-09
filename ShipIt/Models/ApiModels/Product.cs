@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using ShipIt.Models.DataModels;
 
@@ -32,6 +33,20 @@ namespace ShipIt.Models.ApiModels
         //Empty constructor needed for Xml serialization
         public Product()
         {
+        }
+
+        public override String ToString()
+        {
+            return new StringBuilder()
+                    .AppendFormat("id: {0}, ", Id)
+                    .AppendFormat("gtin: {0}, ", Gtin)
+                    .AppendFormat("gcp: {0}, ", Gcp)
+                    .AppendFormat("name: {0}, ", Name)
+                    .AppendFormat("weight: {0}, ", Weight)
+                    .AppendFormat("lowerThreshold: {0}, ", LowerThreshold)
+                    .AppendFormat("discontinued: {0}, ", Discontinued)
+                    .AppendFormat("minimumOrderQuantity: {0}, ", MinimumOrderQuantity)
+                    .ToString();
         }
     }
 }
