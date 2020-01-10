@@ -48,7 +48,7 @@ namespace ShipIt.Controllers
             {
                 if (!products.ContainsKey(orderLine.gtin))
                 {
-                    errors.Add($"Unknown product gtin: {orderLine.gtin}");
+                    errors.Add(string.Format("Unknown product gtin: {0}", orderLine.gtin));
                 }
                 else
                 {
@@ -75,7 +75,7 @@ namespace ShipIt.Controllers
 
                 if (!stock.ContainsKey(lineItem.ProductId))
                 {
-                    errors.Add($"Product: {orderLine.gtin}, no stock held");
+                    errors.Add(string.Format("Product: {0}, no stock held", orderLine.gtin));
                     continue;
                 }
 
@@ -83,7 +83,8 @@ namespace ShipIt.Controllers
                 if (lineItem.Quantity > item.held)
                 {
                     errors.Add(
-                        $"Product: {orderLine.gtin}, stock held: {item.held}, stock to remove: {lineItem.Quantity}");
+                        string.Format("Product: {0}, stock held: {1}, stock to remove: {2}", orderLine.gtin, item.held,
+                            lineItem.Quantity));
                 }
             }
 

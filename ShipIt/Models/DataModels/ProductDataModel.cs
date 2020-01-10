@@ -9,7 +9,7 @@ namespace ShipIt.Models.DataModels
 {
     public class DatabaseColumnName : Attribute
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
         public DatabaseColumnName(string name)
         {

@@ -21,32 +21,36 @@ namespace ShipIt.Parsers
             }
             if (string.IsNullOrEmpty(requestModel.MinimumOrderQuantity))
             {
-                errors.Add("Discontinued must be set");
+                errors.Add("MinimumOrderQuantity must be set");
             }
             if (string.IsNullOrEmpty(requestModel.Weight))
             {
-                errors.Add("Discontinued must be set");
+                errors.Add("Weight must be set");
             }
 
             if (errors.Any())
             {
                 throw new MalformedRequestException(string.Join("\n", errors));
             }
-
-
-            if (!bool.TryParse(requestModel.Discontinued, out bool discontinued))
+            
+            bool discontinued;
+            int lowerThreshold;
+            int minimumOrderQuantity;
+            int weight;
+            
+            if (!bool.TryParse(requestModel.Discontinued, out discontinued))
             {
                 errors.Add("Discontinued must be set to true or false");
             }
-            if (!int.TryParse(requestModel.Gtin, out int lowerThreshold))
+            if (!int.TryParse(requestModel.LowerThreshold, out lowerThreshold))
             {
                 errors.Add("LowerThreshold must be set to an integer");
             }
-            if (!int.TryParse(requestModel.Gtin, out int minimumOrderQuantity))
+            if (!int.TryParse(requestModel.MinimumOrderQuantity, out minimumOrderQuantity))
             {
                 errors.Add("MinimumOrderQuantity must be set to an integer");
             }
-            if (!int.TryParse(requestModel.Weight, out int weight))
+            if (!int.TryParse(requestModel.Weight, out weight))
             {
                 errors.Add("Weight must be set to an integer");
             }

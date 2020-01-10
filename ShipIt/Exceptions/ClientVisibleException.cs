@@ -4,7 +4,7 @@ namespace ShipIt.Exceptions
 {
     public abstract class ClientVisibleException : Exception
     {
-        public ErrorCode ErrorCode { get; }
+        public abstract ErrorCode ErrorCode { get; set; }
 
         protected ClientVisibleException(string message, ErrorCode errorCode) : base(message)
         {

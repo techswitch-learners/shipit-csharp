@@ -13,14 +13,14 @@ namespace ShipIt
                 new { controller = "Product", id = RouteParameter.Optional }
             );
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                "DefaultApi",
+                "{controller}/{id}",
+                new { id = RouteParameter.Optional }
             );
             config.Routes.MapHttpRoute(
-                name: "AppLaunch",
-                routeTemplate: "",
-                defaults: new { controller = "Status" }
+                "AppLaunch",
+                "",
+                new { controller = "Status" }
             );
             config.Filters.Add(new ShipItExceptionFilterAttribute());
         }

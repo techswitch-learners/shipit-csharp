@@ -37,7 +37,7 @@ namespace ShipIt.Validators
         {
             if (value == null)
             {
-                addError($"Field {fieldName} cannot be null");
+                addError(string.Format("Field {0} cannot be null", fieldName));
             }
         }
 
@@ -49,15 +49,16 @@ namespace ShipIt.Validators
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                addError($"Field {fieldName} cannot be blank");
+                addError(string.Format("Field {0} cannot be blank", fieldName));
             }
         }
 
         protected void AssertNumeric(string fieldName, string value)
         {
-            if (!double.TryParse(value, out double d))
+            double d;
+            if (!double.TryParse(value, out d))
             {
-                addError($"Field {fieldName} must be numeric");
+                addError(string.Format("Field {0} must be numeric", fieldName));
             }
         }
 
@@ -65,7 +66,7 @@ namespace ShipIt.Validators
         {
             if (value.Length > maxLength)
             {
-                addError($"Field {fieldName} must be shorter than {maxLength} characters");
+                addError(string.Format("Field {0} must be shorter than {1} characters", fieldName, maxLength));
             }
         }
 
@@ -73,7 +74,7 @@ namespace ShipIt.Validators
         {
             if (value.Length != exactLength)
             {
-                addError($"Field {fieldName} must be exactly {exactLength} characters");
+                addError(string.Format("Field {0} must be exactly {1} characters", fieldName, exactLength));
             }
         }
 
@@ -85,7 +86,7 @@ namespace ShipIt.Validators
         {
             if (value < 0)
             {
-                addError($"Field {fieldName} must be non-negative");
+                addError(string.Format("Field {0} must be non-negative", fieldName));
             }
         }
 
@@ -93,7 +94,7 @@ namespace ShipIt.Validators
         {
             if (value < 0)
             {
-                addError($"Field {fieldName} must be non-negative");
+                addError(string.Format("Field {0} must be non-negative", fieldName));
             }
         }
 
