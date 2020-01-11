@@ -48,10 +48,7 @@ namespace ShipIt.Controllers
                 {
                     Company company = new Company(companyRepository.GetCompany(product.Gcp));
 
-                    int magicalInt = 3; //I have no idea what this is, or why it is 3.
-
-                    //The line below is copied from the Java code. It is not known why this is the order quantity.
-                    var orderQuantity = Math.Max(product.LowerThreshold * magicalInt - stock.held, product.MinimumOrderQuantity);
+                    var orderQuantity = Math.Max(product.LowerThreshold * 3 - stock.held, product.MinimumOrderQuantity);
 
                     if (!orderlinesByCompany.ContainsKey(company))
                     {
