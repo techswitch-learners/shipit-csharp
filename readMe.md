@@ -1,7 +1,7 @@
 ShipIt Inventory Management
 ===========================
 
-Copyright 2007.
+Copyright 2010.
 
 # Setup Instructions
 
@@ -10,37 +10,38 @@ Copyright 2007.
 ### With Visual Studio
 
 To run the app via Visual Studio:
+
 * Open the `ShipIt.sln` solution by going to `File` -> `Open` -> `Project/Solution`
 * Add a connections.config to both the ShipIt and ShipItTest projects, adding a connection string to each e.g.
+
 ```
 <connectionStrings>
   <add name="MyPostgres" providerName="System.Data.SqlClient" connectionString="Server=127.0.0.1;Port=5432;Database=ShipItTest;User Id=postgres; Password=password;" />
 </connectionStrings>
 ```
-  * Ensure that the main and test connection strings point to different databases
+
+* Ensure that the main and test connection strings point to different databases
 
 ### On AWS Elastic Beanstalk
 
-<!-- To update a running [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) instance:
+To update a running [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) instance:
 
-* Update the version number in `pom.xml`.
-* Build via `mvn install`, note the name of the war which was just built.
-* From the AWS console, go to `Services` -> `Elastic Beanstalk`, and choose your instance
-  from the dashboard.   Choose `Upload and Deploy`, then `Browse...` and choose the war
-  which you just build with `mvn install`.  Click `Deploy`.  Wait for the deployment to
-  be marked as successful.
+* Install [AWS Toolkit for Visual Studio](https://aws.amazon.com/visualstudio/)
+* Open the Warehouses-CSharp project in Visual Studio and add your AWS credentials to the AWS Toolkit
+* Right click on the ShipIt project and select Publish to AWS
+* Select the region your prod environment is running on and redeploy to that environment
 
 To check the logs:  From the AWS console, go to `Services` -> `Elastic Beanstalk`, and
 choose your instance from the dashboard.   Click `Logs` on the left, then `Request Logs`.
 
 In the unlikely event that you need to change any of the injected configuration, for
 example the database connection string or password, then these are available under
-`Configuration` - `Software Configuration`.
+`Configuration` -> `Software`.
 
 Information on the CPU utilisation, and network utilisation is available under `Monitoring`,
-it may also be interesting to look at the utilisation or logs of the MySQL database instance
-which backs this application.  These are available under `Services` -> `RDS` -> `Instances`
-- `shipit`. -->
+it may also be interesting to look at the utilisation or logs of the PostgreSQL database instance
+which backs this application.  These are available under `Services` -> `RDS` -> `Databases`
+-> `shipit`.
 
 ## Unit Tests
 
