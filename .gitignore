@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Connections configurations
+ShipIt/connections.config
+ShipItTest/connections.config

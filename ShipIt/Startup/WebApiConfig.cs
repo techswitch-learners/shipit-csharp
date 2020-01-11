@@ -23,6 +23,7 @@ namespace ShipIt
                 new { controller = "Status" }
             );
             config.Filters.Add(new ShipItExceptionFilterAttribute());
+            config.Formatters.XmlFormatter.UseXmlSerializer = true;
         }
     }
 }

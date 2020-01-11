@@ -58,6 +58,7 @@ namespace ShipIt.Controllers
             return new Response() { Success = true };
         }
 
+        [HttpPatch]
         public Response Discontinue(string gtin)
         {
             if (gtin == null)

@@ -25,7 +25,7 @@ namespace ShipIt.Repositories
     {
         public static IDbConnection CreateSqlConnection()
         {
-            return new NpgsqlConnection(ConfigurationManager.ConnectionStrings["MyPostgres"].ConnectionString);
+            return new NpgsqlConnection(ConnectionHelper.GetConnectionString());
         }
 
         public int GetCount()
