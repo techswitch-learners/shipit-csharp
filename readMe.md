@@ -20,10 +20,9 @@ To run the app via Visual Studio:
 </connectionStrings>
 ```
 
-* Ensure that the main and test connection strings point to different databases
+### Deploy to Production
 
-### On AWS Elastic Beanstalk
-
+ShipIt is deployed on AWS Elastic Beanstalk with a postgres DB.
 To update a running [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) instance:
 
 * Install [AWS Toolkit for Visual Studio](https://aws.amazon.com/visualstudio/)
@@ -47,8 +46,3 @@ which backs this application.  These are available under `Services` -> `RDS` -> 
 
 Run the tests in Visual Studio by right clicking on the `ShipItTest` project and
 choosing "Run Tests".
-
-Due to the "age" of the codebase, the unit tests rely on a connection to the database.
-Therefore you will need to ensure that you have a database setup whose schema matches
-the production database.  This database can be local or remote.  The details of this
-database are set in the test project's connections.config file that you should have created earlier.
