@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Web.UI.WebControls.WebParts;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Repositories;
@@ -12,32 +10,32 @@ namespace ShipIt.Controllers
 {
     public class OutboundOrderController : ApiController
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IStockRepository stockRepository;
-        private readonly IProductRepository productRepository;
+        private readonly IStockRepository _stockRepository;
+        private readonly IProductRepository _productRepository;
 
         public OutboundOrderController(IStockRepository stockRepository, IProductRepository productRepository)
         {
-            this.stockRepository = stockRepository;
-            this.productRepository = productRepository;
+            _stockRepository = stockRepository;
+            _productRepository = productRepository;
         }
 
         public void Post([FromBody]OutboundOrderRequestModel request)
         {
-            log.Info(String.Format("Processing outbound order: {0}", request));
+            Log.Info($"Processing outbound order: {request}");
 
-            var gtins = new List<String>();
+            var gtins = new List<string>();
             foreach (var orderLine in request.OrderLines)
             {
                 if (gtins.Contains(orderLine.gtin))
                 {
-                    throw new ValidationException(String.Format("Outbound order request contains duplicate product gtin: {0}", orderLine.gtin));
+                    throw new ValidationException($"Outbound order request contains duplicate product gtin: {orderLine.gtin}");
                 }
                 gtins.Add(orderLine.gtin);
             }
 
-            var productDataModels = productRepository.GetProductsByGtin(gtins);
+            var productDataModels = _productRepository.GetProductsByGtin(gtins);
             var products = productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
 
             var lineItems = new List<StockAlteration>();
@@ -48,7 +46,7 @@ namespace ShipIt.Controllers
             {
                 if (!products.ContainsKey(orderLine.gtin))
                 {
-                    errors.Add(string.Format("Unknown product gtin: {0}", orderLine.gtin));
+                    errors.Add($"Unknown product gtin: {orderLine.gtin}");
                 }
                 else
                 {
@@ -63,7 +61,7 @@ namespace ShipIt.Controllers
                 throw new NoSuchEntityException(string.Join("; ", errors));
             }
 
-            var stock = stockRepository.GetStockByWarehouseAndProductIds(request.WarehouseId, productIds);
+            var stock = _stockRepository.GetStockByWarehouseAndProductIds(request.WarehouseId, productIds);
 
             var orderLines = request.OrderLines.ToList();
             errors = new List<string>();
@@ -93,7 +91,7 @@ namespace ShipIt.Controllers
                 throw new InsufficientStockException(string.Join("; ", errors));
             }
 
-            stockRepository.RemoveStock(request.WarehouseId, lineItems);
+            _stockRepository.RemoveStock(request.WarehouseId, lineItems);
         }
     }
 }
