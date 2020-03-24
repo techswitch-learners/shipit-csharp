@@ -25,18 +25,7 @@ namespace ShipIt.Controllers
         {
             Log.Info($"Processing outbound order: {request}");
 
-            var gtins = new List<string>();
-            foreach (var orderLine in request.OrderLines)
-            {
-                if (gtins.Contains(orderLine.gtin))
-                {
-                    throw new ValidationException($"Outbound order request contains duplicate product gtin: {orderLine.gtin}");
-                }
-                gtins.Add(orderLine.gtin);
-            }
-
-            var productDataModels = _productRepository.GetProductsByGtin(gtins);
-            var products = productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
+            var products = FindRequestedProducts(request);
 
             var lineItems = new List<StockAlteration>();
             var productIds = new List<int>();
@@ -92,6 +81,22 @@ namespace ShipIt.Controllers
             }
 
             _stockRepository.RemoveStock(request.WarehouseId, lineItems);
+        }
+
+        private Dictionary<string, Product> FindRequestedProducts(OutboundOrderRequestModel request)
+        {
+            var gtins = new List<string>();
+            foreach (var orderLine in request.OrderLines)
+            {
+                if (gtins.Contains(orderLine.gtin))
+                {
+                    throw new ValidationException($"Outbound order request contains duplicate product gtin: {orderLine.gtin}");
+                }
+                gtins.Add(orderLine.gtin);
+            }
+
+            var productDataModels = _productRepository.GetProductsByGtin(gtins);
+            return productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
         }
     }
 }
