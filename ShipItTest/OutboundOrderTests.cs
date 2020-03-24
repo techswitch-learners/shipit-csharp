@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using ShipIt.Controllers;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 using ShipIt.Repositories;
 using ShipItTest.Builders;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ShipItTest
 {
-    [TestClass]
     public class OutboundOrderControllerTests : AbstractBaseTest
     {
         OutboundOrderController outboundOrderController = new OutboundOrderController(
@@ -43,7 +44,7 @@ namespace ShipItTest
             productId = product.Id;
         }
 
-        [TestMethod]
+        [Test]
         public void TestOutboundOrder()
         {
             onSetUp();
@@ -67,7 +68,7 @@ namespace ShipItTest
             Assert.AreEqual(stock.held, 7);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOutboundOrderInsufficientStock()
         {
             onSetUp();
@@ -96,7 +97,7 @@ namespace ShipItTest
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestOutboundOrderStockNotHeld()
         {
             onSetUp();
@@ -134,7 +135,7 @@ namespace ShipItTest
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestOutboundOrderBadGtin()
         {
             onSetUp();
@@ -169,7 +170,7 @@ namespace ShipItTest
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestOutboundOrderDuplicateGtins()
         {
             onSetUp();

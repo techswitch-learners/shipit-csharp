@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using ShipIt.Controllers;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 using ShipIt.Repositories;
 using ShipItTest.Builders;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ShipItTest
 {
-    [TestClass]
     public class EmployeeControllerTests : AbstractBaseTest
     {
         EmployeeController employeeController = new EmployeeController(new EmployeeRepository());
@@ -21,7 +22,7 @@ namespace ShipItTest
         private const string NAME = "Gissell Sadeem";
         private const int WAREHOUSE_ID = 1;
 
-        [TestMethod]
+        [Test]
         public void TestRoundtripEmployeeRepository()
         {
             onSetUp();
@@ -32,7 +33,7 @@ namespace ShipItTest
             Assert.AreEqual(employeeRepository.GetEmployeeByName(employee.Name).WarehouseId, employee.WarehouseId);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetEmployeeByName()
         {
             onSetUp();
@@ -45,7 +46,7 @@ namespace ShipItTest
             Assert.IsTrue(result.Success);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetEmployeesByWarehouseId()
         {
             onSetUp();
@@ -62,7 +63,7 @@ namespace ShipItTest
             Assert.IsTrue(EmployeesAreEqual(correctEmployeeB, result.Last()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetNonExistentEmployee()
         {
             onSetUp();
@@ -77,7 +78,7 @@ namespace ShipItTest
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetEmployeeInNonexistentWarehouse()
         {
             onSetUp();
