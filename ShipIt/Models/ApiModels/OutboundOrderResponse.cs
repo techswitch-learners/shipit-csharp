@@ -6,6 +6,6 @@ namespace ShipIt.Models.ApiModels
     public class OutboundOrderResponse
     {
         public int NumberOfTrucks => Trucks.Count();
-        public IEnumerable<TruckManifestModel> Trucks { get; set; }
+        public IEnumerable<TruckModel> Trucks { get; set; }
     }
 }

@@ -151,7 +151,7 @@
     <Compile Include="Models\ApiModels\Product.cs" />
     <Compile Include="Models\ApiModels\RemoveEmployeeRequest.cs" />
     <Compile Include="Models\ApiModels\StockAlteration.cs" />
-    <Compile Include="Models\ApiModels\TruckManifestModel.cs" />
+    <Compile Include="Models\ApiModels\TruckModel.cs" />
     <Compile Include="Models\DataModels\CompanyDataModel.cs" />
     <Compile Include="Models\DataModels\EmployeeDataModel.cs" />
     <Compile Include="Models\DataModels\ProductDataModel.cs" />
@@ -168,7 +168,7 @@
     <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\StockRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
-    <Compile Include="Services\TruckManifestService.cs" />
+    <Compile Include="Services\TruckService.cs" />
     <Compile Include="Startup\WindsorCompositionRoot.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Validators\BaseValidator.cs" />

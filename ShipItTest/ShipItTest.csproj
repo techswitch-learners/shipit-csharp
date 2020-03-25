@@ -115,7 +115,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockTests.cs" />
     <Compile Include="AbstractBaseTest.cs" />
-    <Compile Include="TruckManifestServiceTests.cs" />
+    <Compile Include="TruckServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShipIt\ShipIt.csproj">
